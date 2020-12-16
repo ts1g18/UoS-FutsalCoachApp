@@ -59,6 +59,8 @@ class SignupActivity : AppCompatActivity() {
                 return
             }
 
+
+            //if checks are passed then create the user
             auth.createUserWithEmailAndPassword(username.text.toString(), password.text.toString())
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
@@ -66,10 +68,19 @@ class SignupActivity : AppCompatActivity() {
 //                        Log.d(TAG, "createUserWithEmail:success")
 //                        val user = auth.currentUser
 //                        updateUI(user)
-                        Toast.makeText(baseContext, "Signed up successfuly.",
-                            Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this,LoginActivity::class.java))
-                        finish()
+
+                        val user = Firebase.auth.currentUser
+
+                        //send a verification email to the registered email ID
+                        user!!.sendEmailVerification()
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(baseContext, "Signed up successfuly. A verification email has been sent to your email address",Toast.LENGTH_SHORT).show()
+                                    startActivity(Intent(this,LoginActivity::class.java))
+                                    finish()
+                                }
+                            }
+
                     } else {
                         // If sign in fails, display a message to the user.
                         Toast.makeText(baseContext, "Sign up failed. Try again later.",
