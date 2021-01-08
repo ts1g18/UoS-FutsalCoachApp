@@ -36,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
             userLogin()
         }
 
+
     }
 
 
@@ -108,9 +109,10 @@ class LoginActivity : AppCompatActivity() {
             }else{
                 Toast.makeText(baseContext, "Please verify your email address!",Toast.LENGTH_SHORT).show()
             }
-        }else{
-            Toast.makeText(baseContext, "Login Failed!",Toast.LENGTH_SHORT).show()
         }
+        //else{
+            //Toast.makeText(baseContext, "Login Failed!",Toast.LENGTH_SHORT).show()
+        //}
     }
 
 }
