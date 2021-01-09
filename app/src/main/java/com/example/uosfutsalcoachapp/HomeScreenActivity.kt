@@ -15,6 +15,7 @@ class HomeScreenActivity : AppCompatActivity() {
         System.err.println(callingActivity?.className)
         val btnLogout : Button = findViewById(R.id.btnLogout)
         btnLogout.setOnClickListener{
+            //log the current user out and redirect him to the login activity
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(baseContext, "Logged out successfuly.", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, LoginActivity::class.java))
