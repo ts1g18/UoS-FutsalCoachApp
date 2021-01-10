@@ -9,13 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UoSFutsalCoachApp">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".SplashScreenActivity"
+            android:theme="@style/Theme.SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HomeScreenActivity"/>
+        <activity android:name=".LoginActivity">
+
+        </activity>
+        <activity android:name=".HomeScreenActivity" />
         <activity android:name=".SignupActivity" />
     </application>
 
