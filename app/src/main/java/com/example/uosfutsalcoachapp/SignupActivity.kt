@@ -1,23 +1,29 @@
 package com.example.uosfutsalcoachapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.w3c.dom.Text
+
 
 class SignupActivity : AppCompatActivity() {
 
     //declare instance of FirebaseAuth
     private lateinit var auth: FirebaseAuth
+    val fStore = Firebase.firestore
+    var userID = ""
+    private val TAG = "SignupActivity"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -36,6 +42,8 @@ class SignupActivity : AppCompatActivity() {
         private fun signUpUser() {
             val username : TextView = findViewById(R.id.et_username);
             val password : TextView = findViewById(R.id.et_password);
+            val fullName : TextView = findViewById(R.id.et_fullname);
+            val studentID : TextView = findViewById(R.id.et_studentID);
 
 
             //check if an email address is entered
@@ -65,26 +73,45 @@ class SignupActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
 //                        // Sign in success, update UI with the signed-in user's information
-//                        Log.d(TAG, "createUserWithEmail:success")
+                        //Log.d(TAG, "createUserWithEmail:success")
 //                        val user = auth.currentUser
 //                        updateUI(user)
 
                         val user = Firebase.auth.currentUser
 
+
                         //send a verification email to the registered email ID
                         user!!.sendEmailVerification()
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    Toast.makeText(baseContext, "Signed up successfuly. A verification email has been sent to your email address",Toast.LENGTH_SHORT).show()
-                                    startActivity(Intent(this,LoginActivity::class.java))
+                                    Toast.makeText(baseContext,"Signed up successfuly. A verification email has been sent to your email address",Toast.LENGTH_SHORT).show()
+                                    userID = user.uid
+                                    // Create a new user with a fullname and username(emailID) and student id
+                                    val user = hashMapOf(
+                                        "Full Name" to fullName.text.toString(),
+                                        "Email ID" to username.text.toString() ,
+                                        "studentID" to studentID.text.toString()
+                                    )
+                                    val documentReference : DocumentReference = fStore.collection("users").document(userID)
+                                    // Add a new document with a generated ID
+                                    documentReference.set(user)
+                                        .addOnSuccessListener { documentReference ->
+                                            Log.d(TAG, "DocumentSnapshot added with ID: $userID")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.w(TAG, "Error adding document", e)
+                                        }
+                                    startActivity(Intent(this, LoginActivity::class.java))
                                     finish()
                                 }
                             }
 
                     } else {
                         // If sign in fails, display a message to the user.
-                        Toast.makeText(baseContext, "Sign up failed. Try again later.",
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            baseContext, "Sign up failed. Try again later.",
+                            Toast.LENGTH_SHORT
+                        ).show()
 //                        updateUI(null)
                     }
 
