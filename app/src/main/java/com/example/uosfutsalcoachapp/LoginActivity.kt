@@ -139,8 +139,13 @@ class LoginActivity : AppCompatActivity() {
         if (currentUser != null){
             //only allow user to proceed to homepage if the email ID has been verified
             if(currentUser.isEmailVerified) {
-                startActivity(Intent(this, HomeScreenActivity::class.java))
-                finish()
+                if(currentUser.email == "ts1g18@soton.ac.uk") {
+                    startActivity(Intent(this, HomeScreenActivity::class.java))
+                    finish()
+                }else{
+                    startActivity(Intent(this, MemberHomeScreenActivity::class.java))
+                    finish()
+                }
             }else{
                 Toast.makeText(baseContext, "Please verify your email address!",Toast.LENGTH_SHORT).show()
             }
