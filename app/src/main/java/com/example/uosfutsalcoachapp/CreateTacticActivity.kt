@@ -2,6 +2,7 @@ package com.example.uosfutsalcoachapp
 
 import android.content.ClipData
 import android.content.ClipDescription
+import android.graphics.Point
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,11 +13,18 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isInvisible
 import kotlinx.android.synthetic.main.activity_create_tactic.*
 
 class CreateTacticActivity : AppCompatActivity() {
+    //these coordinates represent x y coordinates of the
     var yCoord : Float = 0f
     var xCoord : Float = 0f
+    //playerPositions is hashmap that stores the position of all player pins (button)
+    val playerPositions = HashMap<Button,Pair<Float,Float>>()
+    //framesList stores the position (x,y) of each player(value) and links it with the current frame
+    val framesList = HashMap<Int,HashMap<Button,Pair<Float,Float>>>()
+    var i : Int = 0
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +32,9 @@ class CreateTacticActivity : AppCompatActivity() {
         futsal_pitch.setOnDragListener(dragListener)
         //call the action bar
         val actionBar = supportActionBar
+        //create array list to store each player's position (xCoord,Ycoord) at each frame
+//        var playerPositions : HashMap<String, PlayerPosition>? = null
+
 
         //show the back button in action bar
         if(actionBar != null){
@@ -72,6 +83,16 @@ class CreateTacticActivity : AppCompatActivity() {
             it.visibility = View.INVISIBLE
             true
         }
+
+        val captureFrameBtn : Button = findViewById(R.id.btnCaptureFrame)
+        captureFrameBtn.setOnClickListener{
+            storePlayerPos()
+            framesList.put(i,playerPositions)
+            Toast.makeText(this, "Frame $i was captured.", Toast.LENGTH_LONG).show()
+            println("kati $i $framesList")
+            i++
+
+        }
     }
 
     val dragListener = View.OnDragListener{view,event ->
@@ -82,8 +103,6 @@ class CreateTacticActivity : AppCompatActivity() {
                         //if it returns false the system will stop sending drag events until it sends out 'ACTION_DRAG_ENDED'
             DragEvent.ACTION_DRAG_STARTED -> {
               event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
-                println(event.getX())
-                println(event.getY())
                 true
             }
             //the listener receives 'ACTION_DRAG_ENTERED' when the touch point (point on screen underneath user's finger) has entered the bounding box of the listeners' View
@@ -107,6 +126,8 @@ class CreateTacticActivity : AppCompatActivity() {
                 Toast.makeText(this, dragData, Toast.LENGTH_SHORT).show()
                 xCoord = event.x
                 yCoord = event.y
+                println("TEST " + xCoord + " " + yCoord)
+
                 view.invalidate()
                 val v = event.localState as View
                //need to substract half of the image's width from X and half of its height from Y in order to ensure that player pin is droped exactly where the user wants
@@ -123,11 +144,11 @@ class CreateTacticActivity : AppCompatActivity() {
                 // Does a getResult(), and displays what happened.
                 when(event.result) {
                     true ->
-                        Toast.makeText(this, "Player moved.", Toast.LENGTH_LONG)
+                        Toast.makeText(this, "Player moved.", Toast.LENGTH_SHORT)
                     else ->{
                         val v = event.localState as View
                         v.visibility = View.VISIBLE
-                        Toast.makeText(this, "Keep the player within the pitch!.", Toast.LENGTH_LONG)
+                        Toast.makeText(this, "Keep the player within the pitch!.", Toast.LENGTH_SHORT)
                     }
 
                 }.show()
@@ -143,4 +164,17 @@ class CreateTacticActivity : AppCompatActivity() {
         onBackPressed()
         return true
     }
+    /*
+    * this method will be used to check which player pin is being moved and change the coordinates of that specific player in the hashmap with all player positions
+    * it stores the position of all the player
+     */
+    fun storePlayerPos(){
+        val player1Coord = Pair(player1.x,player1.y)
+        val player2Coord = Pair(player2.x,player2.y)
+        val player3Coord = Pair(player3.x,player3.y)
+            playerPositions.put(player1,player1Coord)
+            playerPositions.put(player2,player2Coord)
+            playerPositions.put(player3,player3Coord)
+    }
+
 }

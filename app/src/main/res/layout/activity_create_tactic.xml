@@ -21,7 +21,7 @@
         app:srcCompat="@drawable/futsal_pitch" />
 
     <Button
-        android:id="@+id/captureFrame"
+        android:id="@+id/btnCaptureFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#5F2D52"
@@ -31,13 +31,13 @@
         android:text="Capture Frame"
         android:textColor="#FAFAFA"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/saveTactic"
+        app:layout_constraintBottom_toTopOf="@+id/btnSaveTactic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/futsal_pitch" />
 
     <Button
-        android:id="@+id/saveTactic"
+        android:id="@+id/btnSaveTactic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#5F2D52"
@@ -47,14 +47,14 @@
         android:text="Save tactic"
         android:textColor="#FAFAFA"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/downloadTactic"
+        app:layout_constraintBottom_toTopOf="@+id/btnDownloadTactic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/captureFrame" />
+        app:layout_constraintTop_toBottomOf="@+id/btnCaptureFrame" />
 
     <Button
-        android:id="@+id/downloadTactic"
+        android:id="@+id/btnDownloadTactic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#5F2D52"
