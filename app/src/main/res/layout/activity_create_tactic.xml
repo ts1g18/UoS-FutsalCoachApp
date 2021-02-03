@@ -71,8 +71,8 @@
 
     <Button
         android:id="@+id/player1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="72dp"
         android:layout_marginTop="156dp"
         android:background="@drawable/player_pin"
@@ -80,29 +80,27 @@
         android:minHeight="0dp"
         android:text="1"
         android:textColor="#FAFAFA"
-        android:textSize="8sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
     <Button
         android:id="@+id/player2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="188dp"
         android:layout_marginTop="196dp"
         android:background="@drawable/player_pin"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
         android:text="2"
         android:textColor="#FAFAFA"
-        android:textSize="8sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
     <Button
         android:id="@+id/player3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="324dp"
         android:layout_marginTop="156dp"
         android:background="@drawable/player_pin"
@@ -110,7 +108,7 @@
         android:minHeight="0dp"
         android:text="3"
         android:textColor="#FAFAFA"
-        android:textSize="8sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 </androidx.constraintlayout.widget.ConstraintLayout>

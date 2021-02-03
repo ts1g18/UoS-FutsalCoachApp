@@ -82,6 +82,8 @@ class CreateTacticActivity : AppCompatActivity() {
                         //if it returns false the system will stop sending drag events until it sends out 'ACTION_DRAG_ENDED'
             DragEvent.ACTION_DRAG_STARTED -> {
               event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                println(event.getX())
+                println(event.getY())
                 true
             }
             //the listener receives 'ACTION_DRAG_ENTERED' when the touch point (point on screen underneath user's finger) has entered the bounding box of the listeners' View
@@ -103,18 +105,21 @@ class CreateTacticActivity : AppCompatActivity() {
                 val item = event.clipData.getItemAt(0)
                 val dragData = item.text
                 Toast.makeText(this, dragData, Toast.LENGTH_SHORT).show()
-//                xCoord = event.x
-//                yCoord = event.y
+                xCoord = event.x
+                yCoord = event.y
                 view.invalidate()
-
                 val v = event.localState as View
-                v.setX(event.getX())
-                v.setY(event.getY())
+               //need to substract half of the image's width from X and half of its height from Y in order to ensure that player pin is droped exactly where the user wants
+                v.setX(xCoord - (v.width / 2))
+                v.setY(yCoord - (v.width / 2))
                 v.visibility = View.VISIBLE
+
                 true
             }
-            DragEvent.ACTION_DRAG_ENDED ->{
+            ACTION_DRAG_ENDED ->{
                 view.invalidate()
+
+
                 // Does a getResult(), and displays what happened.
                 when(event.result) {
                     true ->
@@ -133,15 +138,9 @@ class CreateTacticActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
-
     //when back is pressed go to previous activity
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
-
 }
