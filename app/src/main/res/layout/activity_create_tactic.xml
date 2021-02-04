@@ -31,20 +31,20 @@
         android:text="Capture Frame"
         android:textColor="#FAFAFA"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSaveTactic"
+        app:layout_constraintBottom_toTopOf="@+id/btnPreviewTactic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/futsal_pitch" />
 
     <Button
-        android:id="@+id/btnSaveTactic"
+        android:id="@+id/btnPreviewTactic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#5F2D52"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:padding="12dp"
-        android:text="Save tactic"
+        android:text="Preview Tactic"
         android:textColor="#FAFAFA"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/btnDownloadTactic"
@@ -67,7 +67,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saveTactic" />
+        app:layout_constraintTop_toBottomOf="@+id/btnPreviewTactic" />
 
     <Button
         android:id="@+id/player1"

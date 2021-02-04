@@ -1,5 +1,6 @@
 package com.example.uosfutsalcoachapp
 
+import android.animation.ObjectAnimator
 import android.content.ClipData
 import android.content.ClipDescription
 import android.graphics.Point
@@ -15,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isInvisible
 import kotlinx.android.synthetic.main.activity_create_tactic.*
+import java.util.concurrent.TimeUnit
 
 class CreateTacticActivity : AppCompatActivity() {
     //these coordinates represent x y coordinates of the
@@ -29,12 +31,11 @@ class CreateTacticActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_tactic)
+        //futsal pitch is the boundaries on which we can drag
         futsal_pitch.setOnDragListener(dragListener)
+
         //call the action bar
         val actionBar = supportActionBar
-        //create array list to store each player's position (xCoord,Ycoord) at each frame
-//        var playerPositions : HashMap<String, PlayerPosition>? = null
-
 
         //show the back button in action bar
         if(actionBar != null){
@@ -91,8 +92,22 @@ class CreateTacticActivity : AppCompatActivity() {
             Toast.makeText(this, "Frame $i was captured.", Toast.LENGTH_LONG).show()
             println("kati $i $framesList")
             i++
-
         }
+
+        val previewTacticBtn : Button = findViewById(R.id.btnPreviewTactic)
+        previewTacticBtn.setOnClickListener{
+            framesList.forEach{(frame,player) ->
+                ObjectAnimator.ofFloat(player1,"translationX",100f).apply {
+                    duration = 2000
+                    start()
+                 }
+                ObjectAnimator.ofFloat(player2,"translationX",100f).apply {
+                    duration = 2000
+                    start()
+                }
+            }
+        }
+
     }
 
     val dragListener = View.OnDragListener{view,event ->
@@ -126,9 +141,9 @@ class CreateTacticActivity : AppCompatActivity() {
                 Toast.makeText(this, dragData, Toast.LENGTH_SHORT).show()
                 xCoord = event.x
                 yCoord = event.y
-                println("TEST " + xCoord + " " + yCoord)
 
                 view.invalidate()
+
                 val v = event.localState as View
                //need to substract half of the image's width from X and half of its height from Y in order to ensure that player pin is droped exactly where the user wants
                 v.setX(xCoord - (v.width / 2))
@@ -148,7 +163,7 @@ class CreateTacticActivity : AppCompatActivity() {
                     else ->{
                         val v = event.localState as View
                         v.visibility = View.VISIBLE
-                        Toast.makeText(this, "Keep the player within the pitch!.", Toast.LENGTH_SHORT)
+                        Toast.makeText(this, "Keep the player within the pitch!", Toast.LENGTH_SHORT)
                     }
 
                 }.show()
@@ -176,5 +191,10 @@ class CreateTacticActivity : AppCompatActivity() {
             playerPositions.put(player2,player2Coord)
             playerPositions.put(player3,player3Coord)
     }
-
+    /*
+    * this method loops through the framesList hashmap and calculates the distance that needs to be covered by each player in each frame
+     */
+    fun distanceToMove(){
+        
+    }
 }
