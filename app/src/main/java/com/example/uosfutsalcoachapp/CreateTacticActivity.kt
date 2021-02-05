@@ -1,32 +1,26 @@
 package com.example.uosfutsalcoachapp
 
-import android.animation.ObjectAnimator
 import android.content.ClipData
 import android.content.ClipDescription
-import android.graphics.Point
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import android.os.Bundle
-import android.view.*
+import android.view.DragEvent
 import android.view.DragEvent.ACTION_DRAG_ENDED
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isInvisible
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_create_tactic.*
-import java.util.concurrent.TimeUnit
 
 class CreateTacticActivity : AppCompatActivity() {
     //these coordinates represent x y coordinates of the
     var yCoord : Float = 0f
     var xCoord : Float = 0f
-    //playerPositions is hashmap that stores the position of all player pins (button)
-    val playerPositions = HashMap<Button,Pair<Float,Float>>()
-    //framesList stores the position (x,y) of each player(value) and links it with the current frame
-    val framesList = HashMap<Int,HashMap<Button,Pair<Float,Float>>>()
-    var i : Int = 0
+    var currentFrame = Frame()
+    var tactic = Tactic()
+    var frameCounter : Int = 0
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +44,7 @@ class CreateTacticActivity : AppCompatActivity() {
             val clipText = "This is our ClipData text"
             val item = ClipData.Item(clipText)
             val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText,mimeTypes,item)
+            val data = ClipData(clipText, mimeTypes, item)
 
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, dragShadowBuilder, it, 0)
@@ -63,7 +57,7 @@ class CreateTacticActivity : AppCompatActivity() {
             val clipText = "This is our ClipData text"
             val item = ClipData.Item(clipText)
             val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText,mimeTypes,item)
+            val data = ClipData(clipText, mimeTypes, item)
 
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, dragShadowBuilder, it, 0)
@@ -76,7 +70,7 @@ class CreateTacticActivity : AppCompatActivity() {
             val clipText = "This is our ClipData text"
             val item = ClipData.Item(clipText)
             val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText,mimeTypes,item)
+            val data = ClipData(clipText, mimeTypes, item)
 
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, dragShadowBuilder, it, 0)
@@ -88,36 +82,27 @@ class CreateTacticActivity : AppCompatActivity() {
         val captureFrameBtn : Button = findViewById(R.id.btnCaptureFrame)
         captureFrameBtn.setOnClickListener{
             storePlayerPos()
-            framesList.put(i,playerPositions)
-            Toast.makeText(this, "Frame $i was captured.", Toast.LENGTH_LONG).show()
-            println("kati $i $framesList")
-            i++
+            val clone = clone(currentFrame.getFrame())
+            tactic.setTactic(frameCounter, clone)
+            println("HEYY ${tactic.getTactic().size}")
+            Toast.makeText(this, "Frame $frameCounter was captured.", Toast.LENGTH_SHORT).show()
+            frameCounter++
         }
 
         val previewTacticBtn : Button = findViewById(R.id.btnPreviewTactic)
         previewTacticBtn.setOnClickListener{
-            framesList.forEach{(frame,player) ->
-                ObjectAnimator.ofFloat(player1,"translationX",100f).apply {
-                    duration = 2000
-                    start()
-                 }
-                ObjectAnimator.ofFloat(player2,"translationX",100f).apply {
-                    duration = 2000
-                    start()
-                }
-            }
         }
 
     }
 
-    val dragListener = View.OnDragListener{view,event ->
+    val dragListener = View.OnDragListener{ view, event ->
         when(event.action){
             //in response to the user gesture to begin drag (long clin on player pin)
                 //the event with action type 'ACTION_DRAG_STARTED' should have a listener that uses the MIME type methods in clip descritpion
                     //if the listener can accept a drop, it should return true to tell the system to continue to send drag events to the listener
                         //if it returns false the system will stop sending drag events until it sends out 'ACTION_DRAG_ENDED'
             DragEvent.ACTION_DRAG_STARTED -> {
-              event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
                 true
             }
             //the listener receives 'ACTION_DRAG_ENTERED' when the touch point (point on screen underneath user's finger) has entered the bounding box of the listeners' View
@@ -135,32 +120,31 @@ class CreateTacticActivity : AppCompatActivity() {
                 view.invalidate()
                 true
             }
-            DragEvent.ACTION_DROP->{
+            DragEvent.ACTION_DROP -> {
                 val item = event.clipData.getItemAt(0)
                 val dragData = item.text
-                Toast.makeText(this, dragData, Toast.LENGTH_SHORT).show()
                 xCoord = event.x
                 yCoord = event.y
 
                 view.invalidate()
 
                 val v = event.localState as View
-               //need to substract half of the image's width from X and half of its height from Y in order to ensure that player pin is droped exactly where the user wants
+                //need to substract half of the image's width from X and half of its height from Y in order to ensure that player pin is droped exactly where the user wants
                 v.setX(xCoord - (v.width / 2))
                 v.setY(yCoord - (v.width / 2))
                 v.visibility = View.VISIBLE
 
                 true
             }
-            ACTION_DRAG_ENDED ->{
+            ACTION_DRAG_ENDED -> {
                 view.invalidate()
 
 
                 // Does a getResult(), and displays what happened.
-                when(event.result) {
+                when (event.result) {
                     true ->
                         Toast.makeText(this, "Player moved.", Toast.LENGTH_SHORT)
-                    else ->{
+                    else -> {
                         val v = event.localState as View
                         v.visibility = View.VISIBLE
                         Toast.makeText(this, "Keep the player within the pitch!", Toast.LENGTH_SHORT)
@@ -173,7 +157,21 @@ class CreateTacticActivity : AppCompatActivity() {
             else -> false
         }
     }
-
+    override fun onBackPressed() {
+            AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Go Back?")
+                    .setMessage("Are you sure you want to go back?")
+                    .setPositiveButton("Yes") {
+                        dialog, which -> finish()
+                        if(frameCounter>0) {
+                            Toast.makeText(this,"Tactic was not saved.",Toast.LENGTH_SHORT).show()
+                            tactic.getTactic().clear()
+                        }
+                    }
+                    .setNegativeButton("No", null)
+                    .show()
+    }
     //when back is pressed go to previous activity
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
@@ -184,17 +182,50 @@ class CreateTacticActivity : AppCompatActivity() {
     * it stores the position of all the player
      */
     fun storePlayerPos(){
-        val player1Coord = Pair(player1.x,player1.y)
-        val player2Coord = Pair(player2.x,player2.y)
-        val player3Coord = Pair(player3.x,player3.y)
-            playerPositions.put(player1,player1Coord)
-            playerPositions.put(player2,player2Coord)
-            playerPositions.put(player3,player3Coord)
+        val player1Coord = Pair(player1.x, player1.y)
+        val player2Coord = Pair(player2.x, player2.y)
+        val player3Coord = Pair(player3.x, player3.y)
+        currentFrame.setFrame(player1, player1Coord)
+        currentFrame.setFrame(player2, player2Coord)
+        currentFrame.setFrame(player3, player3Coord)
     }
     /*
-    * this method loops through the framesList hashmap and calculates the distance that needs to be covered by each player in each frame
+    * this method loops through each player's array (that contains player's position in each frame) and calculates distance that needs to be covered by each player from 1 frame to the next
      */
-    fun distanceToMove(){
-        
+//    fun distanceToMove(){
+//        println(player1Pos)
+//        println(player2Pos)
+//        println(player3Pos)
+//        for(position in player1Pos){
+//            var fromX = player1Pos.get(i).first
+//            var fromY = player1Pos.get(i).second
+//            i++
+//            if(i < player1Pos.size) {
+//                var toX = player1Pos.get(i).first
+//                var toY = player1Pos.get(i).second
+//                println("X from $fromX to $toX")
+//                println("Y from $fromY to $toY")
+//            }
+//
+//        }
+//    }
+
+    /*
+    * this method goes through the 'playerPositions' and stores in an array list (passed as an arguement) the position of a single player at each frame (represented by indexes, e.g. index 0 = frame 0)
+     */
+    fun getFromPosition(playerArray: ArrayList<Pair<Float, Float>>){
+        var fromX = currentFrame.getPlayerXPosition(player1)
+        var fromY = currentFrame.getPlayerYPosition(player1)
+
+    }
+    /*
+    * this method is used to clone the playerPositions hashmap before storing in the tactics hashmap
+    * this is because when trying to map the playerPositions Hashmap with the frames in the tactics hashmap the previous values in previous frames were overwritten
+    * this was because the values in the tactics hashmap were a reference to the playerPositions hashmap and any changes in that map reflected changes in the tactics map
+     */
+    fun <K, V> clone(original: Map<K, V>): HashMap<K, V> {
+        val copy: HashMap<K, V> = HashMap()
+        copy.putAll(original)
+        return copy
     }
 }
