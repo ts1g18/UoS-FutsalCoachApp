@@ -1,5 +1,8 @@
 package com.example.uosfutsalcoachapp
 
+import android.R.id
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.ClipData
 import android.content.ClipDescription
 import android.os.Build
@@ -14,6 +17,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_create_tactic.*
 
+
 class CreateTacticActivity : AppCompatActivity() {
     //these coordinates represent x y coordinates of the
     var yCoord : Float = 0f
@@ -21,6 +25,7 @@ class CreateTacticActivity : AppCompatActivity() {
     var currentFrame = Frame()
     var tactic = Tactic()
     var frameCounter : Int = 0
+    val player1Pos = ArrayList<Pair<Float, Float>>()
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,10 +93,45 @@ class CreateTacticActivity : AppCompatActivity() {
             Toast.makeText(this, "Frame $frameCounter was captured.", Toast.LENGTH_SHORT).show()
             frameCounter++
         }
-
+        //TODO PREVIEW TACTIC BUTTON SHOULD ONLY BE ENABLED IF USER CLICKS TICK ON TOP RIGHT
         val previewTacticBtn : Button = findViewById(R.id.btnPreviewTactic)
         previewTacticBtn.setOnClickListener{
+            tactic.getTactic().forEach{ (frameNumber, frame)->
+                val frame = tactic.getTactic().get(frameNumber)
+                frame?.forEach { (player, playerPos) ->
+                    //TODO METHOD THAT CHECCKS IF CONTAINS FOR ALL PLAYERS
+                    if(player.toString().contains("player1")){
+                        frame.get(player)?.let { it1 -> player1Pos.add(it1) }
+                    }
+                }
+            }
+            //first we need to set the position of the players to the initial one
+            //TODO METHOD TO RESET ALL PLAYER POSITIONS TO INITIAL BEFORE DEMONSTRATING TACTIC ANIMATION
+            player1.setX(player1Pos.get(0).first)
+            player1.setY(player1Pos.get(0).second)
+            var id = 1
+            val animEnd: AnimatorListenerAdapter = object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    id++
+                    if (id !== player1Pos.size) {
+                        player1.animate()
+                                .x(player1Pos.get(id).first)
+                                .y(player1Pos.get(id).second)
+                                .setDuration(2000)
+                                .setListener(this)
+                    }
+                }
+            }
+
+            player1.animate()
+                    .x(player1Pos.get(id).first).y(player1Pos.get(id).second)
+                    .setDuration(2000).setListener(animEnd)
+
         }
+
+
+
 
     }
 
@@ -162,11 +202,11 @@ class CreateTacticActivity : AppCompatActivity() {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("Go Back?")
                     .setMessage("Are you sure you want to go back?")
-                    .setPositiveButton("Yes") {
-                        dialog, which -> finish()
+                    .setPositiveButton("Yes") { dialog, which -> finish()
                         if(frameCounter>0) {
-                            Toast.makeText(this,"Tactic was not saved.",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Tactic was not saved.", Toast.LENGTH_SHORT).show()
                             tactic.getTactic().clear()
+                            player1Pos.clear()
                         }
                     }
                     .setNegativeButton("No", null)
