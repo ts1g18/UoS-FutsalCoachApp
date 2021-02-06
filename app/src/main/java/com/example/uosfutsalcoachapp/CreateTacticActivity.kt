@@ -26,6 +26,8 @@ class CreateTacticActivity : AppCompatActivity() {
     var tactic = Tactic()
     var frameCounter : Int = 0
     val player1Pos = ArrayList<Pair<Float, Float>>()
+    val player2Pos = ArrayList<Pair<Float, Float>>()
+    val player3Pos = ArrayList<Pair<Float, Float>>()
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,37 +98,17 @@ class CreateTacticActivity : AppCompatActivity() {
         //TODO PREVIEW TACTIC BUTTON SHOULD ONLY BE ENABLED IF USER CLICKS TICK ON TOP RIGHT
         val previewTacticBtn : Button = findViewById(R.id.btnPreviewTactic)
         previewTacticBtn.setOnClickListener{
-            tactic.getTactic().forEach{ (frameNumber, frame)->
-                val frame = tactic.getTactic().get(frameNumber)
-                frame?.forEach { (player, playerPos) ->
-                    //TODO METHOD THAT CHECCKS IF CONTAINS FOR ALL PLAYERS
-                    if(player.toString().contains("player1")){
-                        frame.get(player)?.let { it1 -> player1Pos.add(it1) }
-                    }
-                }
-            }
+            generateListOfPlayerPositions()
             //first we need to set the position of the players to the initial one
             //TODO METHOD TO RESET ALL PLAYER POSITIONS TO INITIAL BEFORE DEMONSTRATING TACTIC ANIMATION
-            player1.setX(player1Pos.get(0).first)
-            player1.setY(player1Pos.get(0).second)
-            var id = 1
-            val animEnd: AnimatorListenerAdapter = object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    super.onAnimationEnd(animation)
-                    id++
-                    if (id !== player1Pos.size) {
-                        player1.animate()
-                                .x(player1Pos.get(id).first)
-                                .y(player1Pos.get(id).second)
-                                .setDuration(2000)
-                                .setListener(this)
-                    }
-                }
-            }
+            resetPlayers()
+            movePlayer(player1,player1Pos)
 
-            player1.animate()
-                    .x(player1Pos.get(id).first).y(player1Pos.get(id).second)
-                    .setDuration(2000).setListener(animEnd)
+            println(player1Pos)
+            println(player2Pos)
+            println(player3Pos)
+
+
 
         }
 
@@ -134,8 +116,49 @@ class CreateTacticActivity : AppCompatActivity() {
 
 
     }
+    private fun movePlayer(player:Button,positions:ArrayList<Pair<Float,Float>>){
+        var id = 1
+//        var id2 = 1
+//        var id3 = 1
+        val animEnd: AnimatorListenerAdapter = object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                id++
+                super.onAnimationEnd(animation)
+                if (id < positions.size) {
+                    player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2500).setListener(this)
+                }
+//                if (id2 < player2Pos.size) {
+//                    player2.animate().x(player2Pos.get(id2).first).y(player2Pos.get(id2).second).setDuration(2500).setListener(this)
+//                }
+//                if (id3 < player3Pos.size) {
+//                    player3.animate().x(player3Pos.get(id3).first).y(player3Pos.get(id3).second).setDuration(2500).setListener(this)
+//                }
 
-    val dragListener = View.OnDragListener{ view, event ->
+//                id2++
+//                id3++
+            }
+
+        }
+        player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2500).setListener(animEnd)
+//        player2.animate().x(player2Pos.get(id2).first).y(player2Pos.get(id2).second).setDuration(2500).setListener(animEnd)
+//        player3.animate().x(player3Pos.get(id3).first).y(player3Pos.get(id3).second).setDuration(2500).setListener(animEnd)
+
+    }
+    /*
+     * this method resets the position of the player provided as argument to the initial one
+     * it is used before previewing the tactic
+     */
+    private fun resetPlayers(){
+        player1.setX(player1Pos.get(0).first)
+        player1.setY(player1Pos.get(0).second)
+
+        player2.setX(player2Pos.get(0).first)
+        player2.setY(player2Pos.get(0).second)
+
+        player3.setX(player3Pos.get(0).first)
+        player3.setY(player3Pos.get(0).second)
+    }
+    private val dragListener = View.OnDragListener{ view, event ->
         when(event.action){
             //in response to the user gesture to begin drag (long clin on player pin)
                 //the event with action type 'ACTION_DRAG_STARTED' should have a listener that uses the MIME type methods in clip descritpion
@@ -207,6 +230,8 @@ class CreateTacticActivity : AppCompatActivity() {
                             Toast.makeText(this, "Tactic was not saved.", Toast.LENGTH_SHORT).show()
                             tactic.getTactic().clear()
                             player1Pos.clear()
+                            player2Pos.clear()
+                            player3Pos.clear()
                         }
                     }
                     .setNegativeButton("No", null)
@@ -221,7 +246,7 @@ class CreateTacticActivity : AppCompatActivity() {
     * this method will be used to check which player pin is being moved and change the coordinates of that specific player in the hashmap with all player positions
     * it stores the position of all the player
      */
-    fun storePlayerPos(){
+    private fun storePlayerPos(){
         val player1Coord = Pair(player1.x, player1.y)
         val player2Coord = Pair(player2.x, player2.y)
         val player3Coord = Pair(player3.x, player3.y)
@@ -251,12 +276,24 @@ class CreateTacticActivity : AppCompatActivity() {
 //    }
 
     /*
-    * this method goes through the 'playerPositions' and stores in an array list (passed as an arguement) the position of a single player at each frame (represented by indexes, e.g. index 0 = frame 0)
+    * this method loops through the tactic (frames mapped to (player,position) ) stores the position of each player in the appropriate arraylist in sequence
+    * E.g. Stores in player1Pos arraylist the position of player 1 in frame 0 at index 0, frame 1 at index 1 etc.
      */
-    fun getFromPosition(playerArray: ArrayList<Pair<Float, Float>>){
-        var fromX = currentFrame.getPlayerXPosition(player1)
-        var fromY = currentFrame.getPlayerYPosition(player1)
-
+    private fun generateListOfPlayerPositions(){
+        tactic.getTactic().forEach{ (frameNumber, frame)->
+            val frame = tactic.getTactic().get(frameNumber)
+            frame?.forEach { (player, playerPos) ->
+                //TODO METHOD THAT CHECCKS IF CONTAINS FOR ALL PLAYERS
+                if(player.toString().contains("player1")){
+                    frame.get(player)?.let { it1 -> player1Pos.add(it1) }
+                } else if(player.toString().contains("player2")){
+                    frame.get(player)?.let { it1 -> player2Pos.add(it1) }
+                }
+                else if(player.toString().contains("player3")){
+                    frame.get(player)?.let { it1 -> player3Pos.add(it1) }
+                }
+            }
+        }
     }
     /*
     * this method is used to clone the playerPositions hashmap before storing in the tactics hashmap
