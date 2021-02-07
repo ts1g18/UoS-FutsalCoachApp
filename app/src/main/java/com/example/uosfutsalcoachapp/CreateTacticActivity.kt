@@ -30,6 +30,11 @@ class CreateTacticActivity : AppCompatActivity() {
     val player3Pos = ArrayList<Pair<Float, Float>>()
     val player4Pos = ArrayList<Pair<Float, Float>>()
     val player5Pos = ArrayList<Pair<Float, Float>>()
+    val opponent1Pos = ArrayList<Pair<Float, Float>>()
+    val opponent2Pos = ArrayList<Pair<Float, Float>>()
+    val opponent3Pos = ArrayList<Pair<Float, Float>>()
+    val opponent4Pos = ArrayList<Pair<Float, Float>>()
+    val opponent5Pos = ArrayList<Pair<Float, Float>>()
     val ballPos = ArrayList<Pair<Float,Float>>()
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,6 +132,71 @@ class CreateTacticActivity : AppCompatActivity() {
             it.visibility = View.INVISIBLE
             true
         }
+        val opponent1 : Button = findViewById(R.id.opponent1)
+        opponent1.setOnLongClickListener{
+            val clipText = "This is our ClipData text"
+            val item = ClipData.Item(clipText)
+            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            val data = ClipData(clipText, mimeTypes, item)
+
+            val dragShadowBuilder = View.DragShadowBuilder(it)
+            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+
+            it.visibility = View.INVISIBLE
+            true
+        }
+        val opponent2 : Button = findViewById(R.id.opponent2)
+        opponent2.setOnLongClickListener{
+            val clipText = "This is our ClipData text"
+            val item = ClipData.Item(clipText)
+            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            val data = ClipData(clipText, mimeTypes, item)
+
+            val dragShadowBuilder = View.DragShadowBuilder(it)
+            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+
+            it.visibility = View.INVISIBLE
+            true
+        }
+        val opponent3 : Button = findViewById(R.id.opponent3)
+        opponent3.setOnLongClickListener{
+            val clipText = "This is our ClipData text"
+            val item = ClipData.Item(clipText)
+            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            val data = ClipData(clipText, mimeTypes, item)
+
+            val dragShadowBuilder = View.DragShadowBuilder(it)
+            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+
+            it.visibility = View.INVISIBLE
+            true
+        }
+        val opponent4 : Button = findViewById(R.id.opponent4)
+        opponent4.setOnLongClickListener{
+            val clipText = "This is our ClipData text"
+            val item = ClipData.Item(clipText)
+            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            val data = ClipData(clipText, mimeTypes, item)
+
+            val dragShadowBuilder = View.DragShadowBuilder(it)
+            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+
+            it.visibility = View.INVISIBLE
+            true
+        }
+        val opponent5 : Button = findViewById(R.id.opponent5)
+        opponent5.setOnLongClickListener{
+            val clipText = "This is our ClipData text"
+            val item = ClipData.Item(clipText)
+            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            val data = ClipData(clipText, mimeTypes, item)
+
+            val dragShadowBuilder = View.DragShadowBuilder(it)
+            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+
+            it.visibility = View.INVISIBLE
+            true
+        }
 
         val captureFrameBtn : Button = findViewById(R.id.btnCaptureFrame)
         captureFrameBtn.setOnClickListener{
@@ -150,6 +220,11 @@ class CreateTacticActivity : AppCompatActivity() {
             movePlayer(player4,player4Pos)
             movePlayer(player5,player5Pos)
             movePlayer(ball,ballPos)
+            movePlayer(opponent1,opponent1Pos)
+            movePlayer(opponent2,opponent2Pos)
+            movePlayer(opponent3,opponent3Pos)
+            movePlayer(opponent4,opponent4Pos)
+            movePlayer(opponent5,opponent5Pos)
 
         }
 
@@ -164,22 +239,29 @@ class CreateTacticActivity : AppCompatActivity() {
         player5Pos.clear()
         player4Pos.clear()
         ballPos.clear()
+        opponent1Pos.clear()
+        opponent2Pos.clear()
+        opponent3Pos.clear()
+        opponent4Pos.clear()
+        opponent5Pos.clear()
     }
+    /*
+    * this method takes as an argument: a player (or ball) and the arraylist of all its points during the tactic
+    * it then animates the player passed as argument from point to point in the sequence provided in the arraylist
+     */
     private fun movePlayer(player:Button,positions:ArrayList<Pair<Float,Float>>){
         var id = 1
-//        var id2 = 1
-//        var id3 = 1
         val animEnd: AnimatorListenerAdapter = object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 id++
                 super.onAnimationEnd(animation)
                 if (id < positions.size) {
-                    player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2500).setListener(this)
+                    player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2200).setListener(this)
                 }
             }
 
         }
-        player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2500).setListener(animEnd)
+        player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2200).setListener(animEnd)
 
     }
     /*
@@ -204,6 +286,21 @@ class CreateTacticActivity : AppCompatActivity() {
 
         ball.setX(ballPos.get(0).first)
         ball.setY(ballPos.get(0).second)
+
+        opponent1.setX(opponent1Pos.get(0).first)
+        opponent1.setY(opponent1Pos.get(0).second)
+
+        opponent2.setX(opponent2Pos.get(0).first)
+        opponent2.setY(opponent2Pos.get(0).second)
+
+        opponent3.setX(opponent3Pos.get(0).first)
+        opponent3.setY(opponent3Pos.get(0).second)
+
+        opponent4.setX(opponent4Pos.get(0).first)
+        opponent4.setY(opponent4Pos.get(0).second)
+
+        opponent5.setX(opponent5Pos.get(0).first)
+        opponent5.setY(opponent5Pos.get(0).second)
     }
     private val dragListener = View.OnDragListener{ view, event ->
         when(event.action){
@@ -300,12 +397,22 @@ class CreateTacticActivity : AppCompatActivity() {
         val player4Coord = Pair(player4.x, player4.y)
         val player5Coord = Pair(player5.x, player5.y)
         val ballCoord = Pair(ball.x, ball.y)
+        val opponent1Coord = Pair(opponent1.x, opponent1.y)
+        val opponent2Coord = Pair(opponent2.x, opponent2.y)
+        val opponent3Coord = Pair(opponent3.x, opponent3.y)
+        val opponent4Coord = Pair(opponent4.x, opponent4.y)
+        val opponent5Coord = Pair(opponent5.x, opponent5.y)
         currentFrame.setFrame(player1, player1Coord)
         currentFrame.setFrame(player2, player2Coord)
         currentFrame.setFrame(player3, player3Coord)
         currentFrame.setFrame(player4, player4Coord)
         currentFrame.setFrame(player5, player5Coord)
         currentFrame.setFrame(ball, ballCoord)
+        currentFrame.setFrame(opponent1, opponent1Coord)
+        currentFrame.setFrame(opponent2, opponent2Coord)
+        currentFrame.setFrame(opponent3, opponent3Coord)
+        currentFrame.setFrame(opponent4, opponent4Coord)
+        currentFrame.setFrame(opponent5, opponent5Coord)
     }
 
     /*
@@ -332,6 +439,20 @@ class CreateTacticActivity : AppCompatActivity() {
                     frame.get(player)?.let { it1 -> player5Pos.add(it1) }
                 }else if(player.toString().contains("ball")){
                     frame.get(player)?.let { it1 -> ballPos.add(it1) }
+                }else if(player.toString().contains("opponent1")){
+                    frame.get(player)?.let { it1 -> opponent1Pos.add(it1) }
+                }
+                else if(player.toString().contains("opponent2")){
+                frame.get(player)?.let { it1 -> opponent2Pos.add(it1) }
+                }
+                else if(player.toString().contains("opponent3")){
+                frame.get(player)?.let { it1 -> opponent3Pos.add(it1) }
+                }
+                else if(player.toString().contains("opponent4")) {
+                    frame.get(player)?.let { it1 -> opponent4Pos.add(it1) }
+                }
+                else if(player.toString().contains("opponent5")) {
+                    frame.get(player)?.let { it1 -> opponent5Pos.add(it1) }
                 }
             }
         }
