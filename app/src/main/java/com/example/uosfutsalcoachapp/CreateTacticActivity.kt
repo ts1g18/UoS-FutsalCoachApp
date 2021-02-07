@@ -3,7 +3,6 @@ package com.example.uosfutsalcoachapp
 import android.R.id
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.ClipData
 import android.content.ClipDescription
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +15,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_create_tactic.*
+import java.lang.Exception
+import java.lang.NullPointerException
 
 
 class CreateTacticActivity : AppCompatActivity() {
@@ -45,155 +46,90 @@ class CreateTacticActivity : AppCompatActivity() {
 
         //call the action bar
         val actionBar = supportActionBar
-
         //show the back button in action bar
         if(actionBar != null){
             //set action bar title
-                actionBar!!.title = "Home Screen Activiy"
+                actionBar!!.title = "Create Tactic"
             //set back button
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
 
         val player1 : Button = findViewById(R.id.player1)
         player1.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
-
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
         val player2 : Button = findViewById(R.id.player2)
         player2.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
-
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
         val player3 : Button = findViewById(R.id.player3)
         player3.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
 
             it.visibility = View.INVISIBLE
             true
         }
         val player4 : Button = findViewById(R.id.player4)
         player4.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
 
             it.visibility = View.INVISIBLE
             true
         }
         val player5 : Button = findViewById(R.id.player5)
         player5.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
-
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
         val ball : Button = findViewById(R.id.ball)
         ball.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
-
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
         val opponent1 : Button = findViewById(R.id.opponent1)
         opponent1.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
-
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
         val opponent2 : Button = findViewById(R.id.opponent2)
         opponent2.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
-
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
         val opponent3 : Button = findViewById(R.id.opponent3)
         opponent3.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
-
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
         val opponent4 : Button = findViewById(R.id.opponent4)
         opponent4.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
-
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
         val opponent5 : Button = findViewById(R.id.opponent5)
         opponent5.setOnLongClickListener{
-            val clipText = "This is our ClipData text"
-            val item = ClipData.Item(clipText)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val data = ClipData(clipText, mimeTypes, item)
-
             val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
-
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
@@ -210,21 +146,25 @@ class CreateTacticActivity : AppCompatActivity() {
         //TODO PREVIEW TACTIC BUTTON SHOULD ONLY BE ENABLED IF USER CLICKS TICK ON TOP RIGHT
         val previewTacticBtn : Button = findViewById(R.id.btnPreviewTactic)
         previewTacticBtn.setOnClickListener{
-            generateListOfPlayerPositions()
-            //first we need to set the position of the players to the initial one
-            //TODO METHOD TO RESET ALL PLAYER POSITIONS TO INITIAL BEFORE DEMONSTRATING TACTIC ANIMATION
-            resetPlayers()
-            movePlayer(player1,player1Pos)
-            movePlayer(player2,player2Pos)
-            movePlayer(player3,player3Pos)
-            movePlayer(player4,player4Pos)
-            movePlayer(player5,player5Pos)
-            movePlayer(ball,ballPos)
-            movePlayer(opponent1,opponent1Pos)
-            movePlayer(opponent2,opponent2Pos)
-            movePlayer(opponent3,opponent3Pos)
-            movePlayer(opponent4,opponent4Pos)
-            movePlayer(opponent5,opponent5Pos)
+            try {
+                generateListOfPlayerPositions()
+                //first we need to set the position of the players to the initial one
+                //TODO METHOD TO RESET ALL PLAYER POSITIONS TO INITIAL BEFORE DEMONSTRATING TACTIC ANIMATION
+                resetPlayers()
+                movePlayer(player1, player1Pos)
+                movePlayer(player2, player2Pos)
+                movePlayer(player3, player3Pos)
+                movePlayer(player4, player4Pos)
+                movePlayer(player5, player5Pos)
+                movePlayer(ball, ballPos)
+                movePlayer(opponent1, opponent1Pos)
+                movePlayer(opponent2, opponent2Pos)
+                movePlayer(opponent3, opponent3Pos)
+                movePlayer(opponent4, opponent4Pos)
+                movePlayer(opponent5, opponent5Pos)
+            }catch (e : Exception){
+
+            }
 
         }
 
@@ -232,6 +172,10 @@ class CreateTacticActivity : AppCompatActivity() {
 
 
     }
+    /*
+    * this method clears all of the playerPos arrays
+    * used when going back to previous activity to ensure that they are re-setted each time the player loads create tactic activity
+     */
     private fun clearPlayerPosArrays(){
         player1Pos.clear()
         player2Pos.clear()
@@ -257,6 +201,8 @@ class CreateTacticActivity : AppCompatActivity() {
                 super.onAnimationEnd(animation)
                 if (id < positions.size) {
                     player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2200).setListener(this)
+                }else{
+                    clearPlayerPosArrays()
                 }
             }
 
@@ -269,38 +215,42 @@ class CreateTacticActivity : AppCompatActivity() {
      * it is used before previewing the tactic
      */
     private fun resetPlayers(){
-        player1.setX(player1Pos.get(0).first)
-        player1.setY(player1Pos.get(0).second)
+        try {
+            player1.setX(player1Pos.get(0).first)
+            player1.setY(player1Pos.get(0).second)
 
-        player2.setX(player2Pos.get(0).first)
-        player2.setY(player2Pos.get(0).second)
+            player2.setX(player2Pos.get(0).first)
+            player2.setY(player2Pos.get(0).second)
 
-        player3.setX(player3Pos.get(0).first)
-        player3.setY(player3Pos.get(0).second)
+            player3.setX(player3Pos.get(0).first)
+            player3.setY(player3Pos.get(0).second)
 
-        player4.setX(player4Pos.get(0).first)
-        player4.setY(player4Pos.get(0).second)
+            player4.setX(player4Pos.get(0).first)
+            player4.setY(player4Pos.get(0).second)
 
-        player5.setX(player5Pos.get(0).first)
-        player5.setY(player5Pos.get(0).second)
+            player5.setX(player5Pos.get(0).first)
+            player5.setY(player5Pos.get(0).second)
 
-        ball.setX(ballPos.get(0).first)
-        ball.setY(ballPos.get(0).second)
+            ball.setX(ballPos.get(0).first)
+            ball.setY(ballPos.get(0).second)
 
-        opponent1.setX(opponent1Pos.get(0).first)
-        opponent1.setY(opponent1Pos.get(0).second)
+            opponent1.setX(opponent1Pos.get(0).first)
+            opponent1.setY(opponent1Pos.get(0).second)
 
-        opponent2.setX(opponent2Pos.get(0).first)
-        opponent2.setY(opponent2Pos.get(0).second)
+            opponent2.setX(opponent2Pos.get(0).first)
+            opponent2.setY(opponent2Pos.get(0).second)
 
-        opponent3.setX(opponent3Pos.get(0).first)
-        opponent3.setY(opponent3Pos.get(0).second)
+            opponent3.setX(opponent3Pos.get(0).first)
+            opponent3.setY(opponent3Pos.get(0).second)
 
-        opponent4.setX(opponent4Pos.get(0).first)
-        opponent4.setY(opponent4Pos.get(0).second)
+            opponent4.setX(opponent4Pos.get(0).first)
+            opponent4.setY(opponent4Pos.get(0).second)
 
-        opponent5.setX(opponent5Pos.get(0).first)
-        opponent5.setY(opponent5Pos.get(0).second)
+            opponent5.setX(opponent5Pos.get(0).first)
+            opponent5.setY(opponent5Pos.get(0).second)
+        }catch (e : Exception){
+            Toast.makeText(this,"No frames captured!",Toast.LENGTH_SHORT).show()
+        }
     }
     private val dragListener = View.OnDragListener{ view, event ->
         when(event.action){
@@ -309,7 +259,6 @@ class CreateTacticActivity : AppCompatActivity() {
                     //if the listener can accept a drop, it should return true to tell the system to continue to send drag events to the listener
                         //if it returns false the system will stop sending drag events until it sends out 'ACTION_DRAG_ENDED'
             DragEvent.ACTION_DRAG_STARTED -> {
-                event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
                 true
             }
             //the listener receives 'ACTION_DRAG_ENTERED' when the touch point (point on screen underneath user's finger) has entered the bounding box of the listeners' View
@@ -328,8 +277,6 @@ class CreateTacticActivity : AppCompatActivity() {
                 true
             }
             DragEvent.ACTION_DROP -> {
-                val item = event.clipData.getItemAt(0)
-                val dragData = item.text
                 xCoord = event.x
                 yCoord = event.y
 
@@ -345,7 +292,6 @@ class CreateTacticActivity : AppCompatActivity() {
             }
             ACTION_DRAG_ENDED -> {
                 view.invalidate()
-
 
                 // Does a getResult(), and displays what happened.
                 when (event.result) {
@@ -373,9 +319,7 @@ class CreateTacticActivity : AppCompatActivity() {
                         if(frameCounter>0) {
                             Toast.makeText(this, "Tactic was not saved.", Toast.LENGTH_SHORT).show()
                             tactic.getTactic().clear()
-                            player1Pos.clear()
-                            player2Pos.clear()
-                            player3Pos.clear()
+                            clearPlayerPosArrays()
                         }
                     }
                     .setNegativeButton("No", null)
