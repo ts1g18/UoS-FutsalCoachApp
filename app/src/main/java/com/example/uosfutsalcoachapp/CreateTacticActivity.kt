@@ -28,6 +28,9 @@ class CreateTacticActivity : AppCompatActivity() {
     val player1Pos = ArrayList<Pair<Float, Float>>()
     val player2Pos = ArrayList<Pair<Float, Float>>()
     val player3Pos = ArrayList<Pair<Float, Float>>()
+    val player4Pos = ArrayList<Pair<Float, Float>>()
+    val player5Pos = ArrayList<Pair<Float, Float>>()
+    val ballPos = ArrayList<Pair<Float,Float>>()
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +88,45 @@ class CreateTacticActivity : AppCompatActivity() {
             it.visibility = View.INVISIBLE
             true
         }
+        val player4 : Button = findViewById(R.id.player4)
+        player4.setOnLongClickListener{
+            val clipText = "This is our ClipData text"
+            val item = ClipData.Item(clipText)
+            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            val data = ClipData(clipText, mimeTypes, item)
+
+            val dragShadowBuilder = View.DragShadowBuilder(it)
+            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+
+            it.visibility = View.INVISIBLE
+            true
+        }
+        val player5 : Button = findViewById(R.id.player5)
+        player5.setOnLongClickListener{
+            val clipText = "This is our ClipData text"
+            val item = ClipData.Item(clipText)
+            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            val data = ClipData(clipText, mimeTypes, item)
+
+            val dragShadowBuilder = View.DragShadowBuilder(it)
+            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+
+            it.visibility = View.INVISIBLE
+            true
+        }
+        val ball : Button = findViewById(R.id.ball)
+        ball.setOnLongClickListener{
+            val clipText = "This is our ClipData text"
+            val item = ClipData.Item(clipText)
+            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            val data = ClipData(clipText, mimeTypes, item)
+
+            val dragShadowBuilder = View.DragShadowBuilder(it)
+            it.startDragAndDrop(data, dragShadowBuilder, it, 0)
+
+            it.visibility = View.INVISIBLE
+            true
+        }
 
         val captureFrameBtn : Button = findViewById(R.id.btnCaptureFrame)
         captureFrameBtn.setOnClickListener{
@@ -103,18 +145,25 @@ class CreateTacticActivity : AppCompatActivity() {
             //TODO METHOD TO RESET ALL PLAYER POSITIONS TO INITIAL BEFORE DEMONSTRATING TACTIC ANIMATION
             resetPlayers()
             movePlayer(player1,player1Pos)
-
-            println(player1Pos)
-            println(player2Pos)
-            println(player3Pos)
-
-
+            movePlayer(player2,player2Pos)
+            movePlayer(player3,player3Pos)
+            movePlayer(player4,player4Pos)
+            movePlayer(player5,player5Pos)
+            movePlayer(ball,ballPos)
 
         }
 
 
 
 
+    }
+    private fun clearPlayerPosArrays(){
+        player1Pos.clear()
+        player2Pos.clear()
+        player3Pos.clear()
+        player5Pos.clear()
+        player4Pos.clear()
+        ballPos.clear()
     }
     private fun movePlayer(player:Button,positions:ArrayList<Pair<Float,Float>>){
         var id = 1
@@ -127,21 +176,10 @@ class CreateTacticActivity : AppCompatActivity() {
                 if (id < positions.size) {
                     player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2500).setListener(this)
                 }
-//                if (id2 < player2Pos.size) {
-//                    player2.animate().x(player2Pos.get(id2).first).y(player2Pos.get(id2).second).setDuration(2500).setListener(this)
-//                }
-//                if (id3 < player3Pos.size) {
-//                    player3.animate().x(player3Pos.get(id3).first).y(player3Pos.get(id3).second).setDuration(2500).setListener(this)
-//                }
-
-//                id2++
-//                id3++
             }
 
         }
         player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2500).setListener(animEnd)
-//        player2.animate().x(player2Pos.get(id2).first).y(player2Pos.get(id2).second).setDuration(2500).setListener(animEnd)
-//        player3.animate().x(player3Pos.get(id3).first).y(player3Pos.get(id3).second).setDuration(2500).setListener(animEnd)
 
     }
     /*
@@ -157,6 +195,15 @@ class CreateTacticActivity : AppCompatActivity() {
 
         player3.setX(player3Pos.get(0).first)
         player3.setY(player3Pos.get(0).second)
+
+        player4.setX(player4Pos.get(0).first)
+        player4.setY(player4Pos.get(0).second)
+
+        player5.setX(player5Pos.get(0).first)
+        player5.setY(player5Pos.get(0).second)
+
+        ball.setX(ballPos.get(0).first)
+        ball.setY(ballPos.get(0).second)
     }
     private val dragListener = View.OnDragListener{ view, event ->
         when(event.action){
@@ -250,30 +297,16 @@ class CreateTacticActivity : AppCompatActivity() {
         val player1Coord = Pair(player1.x, player1.y)
         val player2Coord = Pair(player2.x, player2.y)
         val player3Coord = Pair(player3.x, player3.y)
+        val player4Coord = Pair(player4.x, player4.y)
+        val player5Coord = Pair(player5.x, player5.y)
+        val ballCoord = Pair(ball.x, ball.y)
         currentFrame.setFrame(player1, player1Coord)
         currentFrame.setFrame(player2, player2Coord)
         currentFrame.setFrame(player3, player3Coord)
+        currentFrame.setFrame(player4, player4Coord)
+        currentFrame.setFrame(player5, player5Coord)
+        currentFrame.setFrame(ball, ballCoord)
     }
-    /*
-    * this method loops through each player's array (that contains player's position in each frame) and calculates distance that needs to be covered by each player from 1 frame to the next
-     */
-//    fun distanceToMove(){
-//        println(player1Pos)
-//        println(player2Pos)
-//        println(player3Pos)
-//        for(position in player1Pos){
-//            var fromX = player1Pos.get(i).first
-//            var fromY = player1Pos.get(i).second
-//            i++
-//            if(i < player1Pos.size) {
-//                var toX = player1Pos.get(i).first
-//                var toY = player1Pos.get(i).second
-//                println("X from $fromX to $toX")
-//                println("Y from $fromY to $toY")
-//            }
-//
-//        }
-//    }
 
     /*
     * this method loops through the tactic (frames mapped to (player,position) ) stores the position of each player in the appropriate arraylist in sequence
@@ -291,6 +324,14 @@ class CreateTacticActivity : AppCompatActivity() {
                 }
                 else if(player.toString().contains("player3")){
                     frame.get(player)?.let { it1 -> player3Pos.add(it1) }
+                }
+                else if(player.toString().contains("player4")){
+                    frame.get(player)?.let { it1 -> player4Pos.add(it1) }
+                }
+                else if(player.toString().contains("player5")){
+                    frame.get(player)?.let { it1 -> player5Pos.add(it1) }
+                }else if(player.toString().contains("ball")){
+                    frame.get(player)?.let { it1 -> ballPos.add(it1) }
                 }
             }
         }
