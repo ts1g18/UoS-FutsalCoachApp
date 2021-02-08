@@ -4,22 +4,33 @@ import android.R.id
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.ClipDescription
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.util.Log
 import android.view.DragEvent
 import android.view.DragEvent.ACTION_DRAG_ENDED
 import android.view.View
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_create_tactic.*
 import java.lang.Exception
-import java.lang.NullPointerException
 
 
 class CreateTacticActivity : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
+    private lateinit var docRef : DocumentReference
+    private val TAG = "CreateTacticActivity"
+    val fStore = Firebase.firestore
     //these coordinates represent x y coordinates of the
     var yCoord : Float = 0f
     var xCoord : Float = 0f
@@ -36,6 +47,17 @@ class CreateTacticActivity : AppCompatActivity() {
     val opponent3Pos = ArrayList<Pair<Float, Float>>()
     val opponent4Pos = ArrayList<Pair<Float, Float>>()
     val opponent5Pos = ArrayList<Pair<Float, Float>>()
+    var clonePlayer1 = ArrayList<Pair<Float,Float>>()
+    var clonePlayer2 = ArrayList<Pair<Float,Float>>()
+    var clonePlayer3 = ArrayList<Pair<Float,Float>>()
+    var clonePlayer4 = ArrayList<Pair<Float,Float>>()
+    var clonePlayer5 = ArrayList<Pair<Float,Float>>()
+    var cloneBall = ArrayList<Pair<Float,Float>>()
+    var cloneOpponent1 = ArrayList<Pair<Float,Float>>()
+    var cloneOpponent2 = ArrayList<Pair<Float,Float>>()
+    var cloneOpponent3 = ArrayList<Pair<Float,Float>>()
+    var cloneOpponent4 = ArrayList<Pair<Float,Float>>()
+    var cloneOpponent5 = ArrayList<Pair<Float,Float>>()
     val ballPos = ArrayList<Pair<Float,Float>>()
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,20 +159,19 @@ class CreateTacticActivity : AppCompatActivity() {
         val captureFrameBtn : Button = findViewById(R.id.btnCaptureFrame)
         captureFrameBtn.setOnClickListener{
             storePlayerPos()
+            //clone playerPositions array to avoid problem with reference overwriting existing values
             val clone = clone(currentFrame.getFrame())
             tactic.setTactic(frameCounter, clone)
-            println("HEYY ${tactic.getTactic().size}")
             Toast.makeText(this, "Frame $frameCounter was captured.", Toast.LENGTH_SHORT).show()
             frameCounter++
         }
-        //TODO PREVIEW TACTIC BUTTON SHOULD ONLY BE ENABLED IF USER CLICKS TICK ON TOP RIGHT
         val previewTacticBtn : Button = findViewById(R.id.btnPreviewTactic)
-        previewTacticBtn.setOnClickListener{
+        previewTacticBtn.setOnClickListener {
             try {
                 generateListOfPlayerPositions()
                 //first we need to set the position of the players to the initial one
-                //TODO METHOD TO RESET ALL PLAYER POSITIONS TO INITIAL BEFORE DEMONSTRATING TACTIC ANIMATION
                 resetPlayers()
+                //move the players to demonstrate tactic
                 movePlayer(player1, player1Pos)
                 movePlayer(player2, player2Pos)
                 movePlayer(player3, player3Pos)
@@ -162,21 +183,21 @@ class CreateTacticActivity : AppCompatActivity() {
                 movePlayer(opponent3, opponent3Pos)
                 movePlayer(opponent4, opponent4Pos)
                 movePlayer(opponent5, opponent5Pos)
-            }catch (e : Exception){
+            } catch (e: Exception) {
 
             }
-
         }
 
-
-
-
+        val saveTacticBtn : Button = findViewById(R.id.btnSaveTactic)
+        saveTacticBtn.setOnClickListener {
+            createPopup()
+        }
     }
     /*
     * this method clears all of the playerPos arrays
     * used when going back to previous activity to ensure that they are re-setted each time the player loads create tactic activity
      */
-    private fun clearPlayerPosArrays(){
+    fun clearPlayerPosArrays(){
         player1Pos.clear()
         player2Pos.clear()
         player3Pos.clear()
@@ -268,7 +289,6 @@ class CreateTacticActivity : AppCompatActivity() {
             }
             //
             DragEvent.ACTION_DRAG_LOCATION -> {
-
                 true
             }
             //when drag view leaves our boundaries
@@ -319,6 +339,7 @@ class CreateTacticActivity : AppCompatActivity() {
                         if(frameCounter>0) {
                             Toast.makeText(this, "Tactic was not saved.", Toast.LENGTH_SHORT).show()
                             tactic.getTactic().clear()
+                            currentFrame.getFrame().clear()
                             clearPlayerPosArrays()
                         }
                     }
@@ -367,7 +388,6 @@ class CreateTacticActivity : AppCompatActivity() {
         tactic.getTactic().forEach{ (frameNumber, frame)->
             val frame = tactic.getTactic().get(frameNumber)
             frame?.forEach { (player, playerPos) ->
-                //TODO METHOD THAT CHECCKS IF CONTAINS FOR ALL PLAYERS
                 if(player.toString().contains("player1")){
                     frame.get(player)?.let { it1 -> player1Pos.add(it1) }
                 } else if(player.toString().contains("player2")){
@@ -400,6 +420,7 @@ class CreateTacticActivity : AppCompatActivity() {
                 }
             }
         }
+        clonePlayerPos()
     }
     /*
     * this method is used to clone the playerPositions hashmap before storing in the tactics hashmap
@@ -411,4 +432,76 @@ class CreateTacticActivity : AppCompatActivity() {
         copy.putAll(original)
         return copy
     }
+
+    /*
+    * this method stores the tactic in the firestore database when clicking the save tactic button.
+     */
+    private fun saveTactic(tacticName : String){
+        val tactic = hashMapOf(
+            "player1" to clonePlayer1,
+            "player2" to clonePlayer2,
+            "player3" to clonePlayer3,
+            "player4" to clonePlayer4,
+            "player5" to clonePlayer5,
+            "ball" to cloneBall,
+            "opponent1" to cloneOpponent1,
+            "opponent2" to cloneOpponent2,
+            "opponent3" to cloneOpponent3,
+            "opponent4" to cloneOpponent4,
+            "opponent5" to cloneOpponent5,
+
+        )
+        val documentReference : DocumentReference = fStore.collection("tactics").document(tacticName)
+        // Add a new document with a generated ID
+        documentReference.set(tactic)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
+    }
+
+    private fun createPopup(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Save Tactic")
+
+        val view = layoutInflater.inflate(R.layout.layout_popup,null)
+        val tacticName = view.findViewById<EditText>(R.id.tactic_name)
+
+        builder.setView((view))
+        builder.setPositiveButton("Save", DialogInterface.OnClickListener{ _, _ ->
+            if(tacticName.text.toString().isEmpty()){
+                Toast.makeText(this,"Please enter a name for the tactic",Toast.LENGTH_SHORT).show()
+            }else {
+                saveTactic(tacticName.text.toString())
+                Toast.makeText(this, "Tactic was saved successfuly!",Toast.LENGTH_SHORT).show()
+                clearPlayerPosArrays()
+                tactic.getTactic().clear()
+                currentFrame.getFrame().clear()
+                startActivity(Intent(this, HomeScreenActivity::class.java))
+                finish()
+            }
+        })
+        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener{ _, _ -> })
+        builder.show()
+    }
+
+    /*
+    * clones all of the PlayerPos arrays so that they can be stored to database
+     */
+    fun clonePlayerPos(){
+        clonePlayer1 = ArrayList(player1Pos)
+        clonePlayer2 = ArrayList(player2Pos)
+        clonePlayer3 = ArrayList(player3Pos)
+        clonePlayer4 = ArrayList(player4Pos)
+        clonePlayer5 = ArrayList(player5Pos)
+        cloneBall  = ArrayList(ballPos)
+        cloneOpponent1 = ArrayList(opponent1Pos)
+        cloneOpponent2 = ArrayList(opponent2Pos)
+        cloneOpponent3 = ArrayList(opponent3Pos)
+        cloneOpponent4 = ArrayList(opponent4Pos)
+        cloneOpponent5 = ArrayList(opponent5Pos)
+    }
+
 }
