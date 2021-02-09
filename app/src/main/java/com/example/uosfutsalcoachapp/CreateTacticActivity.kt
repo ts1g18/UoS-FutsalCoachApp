@@ -451,6 +451,7 @@ class CreateTacticActivity : AppCompatActivity() {
             "opponent5" to cloneOpponent5,
 
         )
+
         val documentReference : DocumentReference = fStore.collection("tactics").document(tacticName)
         // Add a new document with a generated ID
         documentReference.set(tactic)
