@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UoSFutsalCoachApp">
-        <activity android:name=".CreateTacticActivity"></activity>
+        <activity android:name=".ViewTacticActivity"></activity>
+        <activity android:name=".CreateTacticActivity" />
         <activity android:name=".MemberHomeScreenActivity" />
         <activity
             android:name=".SplashScreenActivity"

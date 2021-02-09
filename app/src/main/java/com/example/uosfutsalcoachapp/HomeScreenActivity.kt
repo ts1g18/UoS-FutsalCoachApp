@@ -55,10 +55,18 @@ class HomeScreenActivity : AppCompatActivity() {
             finish()
 
         }
+
+        //create tactic
         val btnCreateTactic : Button = findViewById(R.id.btnCreateTactic)
         btnCreateTactic.setOnClickListener{
             //Toast.makeText(baseContext, "Here you can create tactic", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, CreateTacticActivity::class.java))
+        }
+
+        //view tactics
+        val btnViewTactic : Button = findViewById(R.id.btnViewEditTactic)
+        btnViewTactic.setOnClickListener{
+            startActivity(Intent(this,ViewTacticActivity::class.java))
         }
     }
 }
