@@ -1,5 +1,6 @@
 package com.example.uosfutsalcoachapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
@@ -32,6 +34,15 @@ class ViewTacticActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_tactic)
         setTitle("Tactics")
+        //call the action bar
+        val actionBar = supportActionBar
+        //show the back button in action bar
+        if(actionBar != null){
+            //set action bar title
+            actionBar!!.title = "Tactics"
+            //set back button
+            actionBar.setDisplayHomeAsUpEnabled(true)
+        }
 
         // Initialize Firebase Auth and firestore
         auth = Firebase.auth
@@ -43,7 +54,14 @@ class ViewTacticActivity : AppCompatActivity() {
         deleteTacticBtn.setOnClickListener{
             deleteTactic()
         }
+
+        val viewTacticBtn : Button = findViewById(R.id.btnViewTactic)
+        viewTacticBtn.setOnClickListener{
+            viewTactic()
+        }
     }
+
+
 
 
     /*
@@ -96,6 +114,44 @@ class ViewTacticActivity : AppCompatActivity() {
         }catch(e : Exception){
             Toast.makeText(this,"No tactic is currently selected",Toast.LENGTH_SHORT).show()
         }
+    }
+
+
+    private fun viewTactic() {
+        try {
+            //get the name of the tactic to be removed so that we can compare it wwith document.id from firestore and remove from dataabase as well
+            var tacticToView = tacticList.get(adapter.getSelectedPosition()!!).text1
+
+            fStore.collection("tactics").get().addOnSuccessListener { result ->
+                for (document in result) {
+                    if (document.id == tacticToView) {
+                        fStore.collection("tactics").document(tacticToView).get()
+                            .addOnSuccessListener {
+                                Log.d(
+                                    TAG,
+                                    "DocumentSnapshot data: ${document.data}"
+                                )
+                                val intent = Intent(this@ViewTacticActivity, TacticActivity::class.java)
+                                intent.putExtra("tacticName", tacticToView)
+                                startActivity(intent)
+                            }
+                            .addOnFailureListener { e -> Log.w(TAG, "No such document", e) }
+                    }
+                }
+            }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents.", exception)
+                }
+        }catch(e : Exception){
+            Toast.makeText(this,"No tactic is currently selected",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateTacticActivity">
+
+    <ImageView
+        android:id="@+id/futsal_pitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        app:layout_constraintHeight_percent=".75"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="1"
+        app:srcCompat="@drawable/futsal_pitch" />
+
+    <Button
+        android:id="@+id/btnPreviewTactic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#5F2D52"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="12dp"
+        android:text="Preview Tactic"
+        android:textColor="#FAFAFA"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/player1View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/player_pin"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="1"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/player2View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="92dp"
+        android:background="@drawable/player_pin"
+        android:text="2"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/player3View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="132dp"
+        android:background="@drawable/player_pin"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="3"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/player4View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="172dp"
+        android:background="@drawable/player_pin"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="4"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/player5View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="212dp"
+        android:background="@drawable/player_pin"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="5"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/ballView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="188dp"
+        android:layout_marginTop="252dp"
+        android:background="@drawable/player_pin"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:textColor="#FFFF00"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+
+    <Button
+        android:id="@+id/opponent1View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="288dp"
+        android:background="@drawable/player_pin"
+        android:backgroundTint="#9FE2BF"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="1"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/opponent2View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="328dp"
+        android:background="@drawable/player_pin"
+        android:backgroundTint="#9FE2BF"
+        android:text="2"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/opponent3View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="368dp"
+        android:background="@drawable/player_pin"
+        android:backgroundTint="#9FE2BF"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="3"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/opponent4View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="408dp"
+        android:background="@drawable/player_pin"
+        android:backgroundTint="#9FE2BF"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="4"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+    <Button
+        android:id="@+id/opponent5View"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="448dp"
+        android:background="@drawable/player_pin"
+        android:backgroundTint="#9FE2BF"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="5"
+        android:textColor="#FAFAFA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
+        app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
