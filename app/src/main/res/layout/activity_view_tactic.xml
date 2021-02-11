@@ -11,6 +11,33 @@
         android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/buttons"
         tools:listitem="@layout/tactic_item"
        />
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:padding="4dp"
+        android:clipToPadding="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btnViewTactic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Tactic"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btnDeleteTactic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Tactic"
+            android:layout_weight="1"
+            />
+
+
+    </LinearLayout>
 </RelativeLayout>
