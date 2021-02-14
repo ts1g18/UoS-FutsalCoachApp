@@ -4,35 +4,27 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_view_tactic.*
+import kotlinx.android.synthetic.main.activity_captain_view_tactic.*
 import java.lang.Exception
 
-class ViewTacticActivity : AppCompatActivity() {
+class CaptainViewTacticActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var fStore: FirebaseFirestore
     private val TAG = "ViewTacticActivity"
     private val tacticList = ArrayList<TacticItem>()
-    private val adapter = MyAdapter(tacticList)
+    private val adapter = TacticAdapter(tacticList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_tactic)
+        setContentView(R.layout.activity_captain_view_tactic)
         setTitle("Tactics")
         //call the action bar
         val actionBar = supportActionBar
@@ -116,7 +108,9 @@ class ViewTacticActivity : AppCompatActivity() {
         }
     }
 
-
+    /*
+    * this method navigates the captain/member to the TacticActivity in order to demonstrate the movements of the currently selected tactic
+     */
     private fun viewTactic() {
         try {
             //get the name of the tactic to be removed so that we can compare it wwith document.id from firestore and remove from dataabase as well
@@ -131,7 +125,7 @@ class ViewTacticActivity : AppCompatActivity() {
                                     TAG,
                                     "DocumentSnapshot data: ${document.data}"
                                 )
-                                val intent = Intent(this@ViewTacticActivity, TacticActivity::class.java)
+                                val intent = Intent(this@CaptainViewTacticActivity, TacticActivity::class.java)
                                 intent.putExtra("tacticName", tacticToView)
                                 startActivity(intent)
                             }

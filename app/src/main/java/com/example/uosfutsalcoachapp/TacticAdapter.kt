@@ -4,18 +4,14 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_view_tactic.view.*
 import kotlinx.android.synthetic.main.tactic_item.view.*
 
-class MyAdapter(private val tacticList: MutableList<TacticItem>) :
-    RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+class TacticAdapter(private val tacticList: MutableList<TacticItem>) :
+    RecyclerView.Adapter<TacticAdapter.MyViewHolder>() {
     private var selected_position = -1;
-    var removedPosition : Int? = null
 
     //called by recycler view when its time to create a new view holder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -49,7 +45,7 @@ class MyAdapter(private val tacticList: MutableList<TacticItem>) :
     //represents one row in our list
     //each view holder will hold references to the views in our row layout (tactic_item.xml)
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        //create 3 properties that store the references to the 3 views in our row layout (tactic_item.xml)
+        //create 3 properties that store the references to the 3 views in our row layout (ftactic_item.xml)
         // this is how the viewHolder caches this references
         val imageView: ImageView = itemView.image_view //equivalent to findViewById
         val textView1: TextView = itemView.text_view_1

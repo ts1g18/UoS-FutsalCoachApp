@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewTacticActivity">
+    tools:context=".CaptainViewTacticActivity">
     <androidx.recyclerview.widget.RecyclerView
-       android:id="@+id/recycler_view"
+        android:id="@+id/recycler_view"
         android:padding="4dp"
         android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/buttons"
-        tools:listitem="@layout/tactic_item"
-       />
+        tools:listitem="@layout/member_item"
+        />
 
     <LinearLayout
         android:id="@+id/buttons"
@@ -24,17 +24,17 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/btnViewTactic"
+            android:id="@+id/btnViewMember"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View Tactic"
+            android:text="View Member"
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/btnDeleteTactic"
+            android:id="@+id/btnDeleteMember"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Delete Tactic"
+            android:text="Delete Member"
             android:layout_weight="1"
             />
 

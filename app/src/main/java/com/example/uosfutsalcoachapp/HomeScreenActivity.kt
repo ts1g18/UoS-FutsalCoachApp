@@ -5,12 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -66,7 +64,13 @@ class HomeScreenActivity : AppCompatActivity() {
         //view tactics
         val btnViewTactic : Button = findViewById(R.id.btnViewEditTactic)
         btnViewTactic.setOnClickListener{
-            startActivity(Intent(this,ViewTacticActivity::class.java))
+            startActivity(Intent(this,CaptainViewTacticActivity::class.java))
+        }
+
+        //view members
+        val btnViewMembers : Button = findViewById(R.id.btnViewMembers)
+        btnViewMembers.setOnClickListener{
+            startActivity(Intent(this,CaptainViewMembersActivity::class.java))
         }
     }
 }
