@@ -21,6 +21,7 @@ class CaptainViewMembersActivity : AppCompatActivity() {
     private val TAG = "ViewTacticActivity"
     private val memberList = ArrayList<MemberItem>()
     private val adapter = MemberAdapter(memberList)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_captain_view_members)
@@ -38,8 +39,6 @@ class CaptainViewMembersActivity : AppCompatActivity() {
         // Initialize Firebase Auth and firestore
         auth = Firebase.auth
         fStore = Firebase.firestore
-        val user = auth.currentUser
-        println(user)
         generateMemberList()
 
         val btnViewMember : Button = findViewById(R.id.btnViewMember)
@@ -113,7 +112,7 @@ class CaptainViewMembersActivity : AppCompatActivity() {
             var memberToView = memberList.get(adapter.getSelectedPosition()!!).text1
             fStore.collection("users").get().addOnSuccessListener { result ->
                 for (document in result) {
-                    if (document.data.get("Full Name") == memberToView) {
+                    if (document.data.get("Full Name").toString() == memberToView) {
                         fStore.collection("users").document(memberToView).get()
                             .addOnSuccessListener {
                                 Log.d(
