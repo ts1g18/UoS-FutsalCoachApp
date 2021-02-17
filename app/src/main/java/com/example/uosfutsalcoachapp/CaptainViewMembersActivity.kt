@@ -119,7 +119,7 @@ class CaptainViewMembersActivity : AppCompatActivity() {
                                     TAG,
                                     "DocumentSnapshot data: ${document.data}"
                                 )
-                                val intent = Intent(this@CaptainViewMembersActivity, MemberProfileActivity::class.java)
+                                val intent = Intent(this@CaptainViewMembersActivity, ProfileActivity::class.java)
                                 intent.putExtra("memberName", memberToView)
                                 startActivity(intent)
                             }

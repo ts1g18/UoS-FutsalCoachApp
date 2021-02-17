@@ -14,15 +14,15 @@ import com.google.firebase.ktx.Firebase
 import org.w3c.dom.Text
 import java.lang.Exception
 
-class MemberProfileActivity : AppCompatActivity() {
+class ProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var fStore: FirebaseFirestore
     private var memberName = ""
-    private val TAG = "MemberProfileActivity"
+    private val TAG = "ProfileActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_member_profile)
+        setContentView(R.layout.activity_profile)
         // Initialize Firebase Auth and firestore
         auth = Firebase.auth
         fStore = Firebase.firestore
