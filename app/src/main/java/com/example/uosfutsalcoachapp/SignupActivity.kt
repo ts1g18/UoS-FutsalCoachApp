@@ -2,7 +2,6 @@ package com.example.uosfutsalcoachapp
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,13 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_signup.*
-import java.net.URL
 import java.util.*
 
 
@@ -43,7 +40,7 @@ class SignupActivity : AppCompatActivity() {
         auth = Firebase.auth
         val btnSignUp: Button = findViewById(R.id.btnSignUp)
         btnSignUp.setOnClickListener {
-            uploadImageToFirebaseStorage()
+            uploadImageAndRegister()
         }
 
         val userPhoto: Button = findViewById(R.id.btn_select_photo)
@@ -158,8 +155,8 @@ class SignupActivity : AppCompatActivity() {
             }
     }
 
-    //upload user photo to firebase
-    private fun uploadImageToFirebaseStorage() {
+    //upload user photo to firebase storage
+    private fun uploadImageAndRegister() {
         if (selectedPhotoUri == null) return
         //random long string
         val filename = UUID.randomUUID().toString()

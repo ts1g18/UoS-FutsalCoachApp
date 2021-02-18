@@ -72,5 +72,10 @@ class HomeScreenActivity : AppCompatActivity() {
         btnViewMembers.setOnClickListener{
             startActivity(Intent(this,CaptainViewMembersActivity::class.java))
         }
+
+        val btnChat : Button = findViewById(R.id.btnChat)
+        btnChat.setOnClickListener{
+            startActivity(Intent(this,ChatActivity::class.java))
+        }
     }
 }

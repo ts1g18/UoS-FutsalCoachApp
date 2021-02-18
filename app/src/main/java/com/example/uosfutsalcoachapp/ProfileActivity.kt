@@ -11,6 +11,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_profile.*
 import org.w3c.dom.Text
 import java.lang.Exception
 
@@ -53,6 +55,7 @@ class ProfileActivity : AppCompatActivity() {
             fStore.collection("users").get().addOnSuccessListener { result ->
                 for (document in result) {
                     if (document.data.get("Full Name").toString() == memberName) {
+                        Picasso.get().load(document.data.get("User Photo").toString()).into(memberPicture)
                         memberFullName.text = "Full Name: ${document.data.get("Full Name") as CharSequence?}"
                         memberEmail.text = "Email ID: ${document.data.get("Email ID") as CharSequence?}"
                         studentID.text = "Student ID: ${document.data.get("studentID") as CharSequence?}"
