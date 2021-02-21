@@ -32,13 +32,12 @@ class LoginActivity : AppCompatActivity() {
         val tv_signup: TextView = findViewById(R.id.tv_signup)
         tv_signup.setOnClickListener{
             startActivity(Intent(this, SignupActivity::class.java))
-            finish()
         }
         val tv_forgotPass: TextView = findViewById(R.id.tv_forgotPass)
         tv_forgotPass.setOnClickListener{
 
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("Forgot Password")
+            builder.setTitle("Please enter your registered email address.")
 
             val view = layoutInflater.inflate(R.layout.dialog_forgot_password,null)
             val username = view.findViewById<EditText>(R.id.et_username)

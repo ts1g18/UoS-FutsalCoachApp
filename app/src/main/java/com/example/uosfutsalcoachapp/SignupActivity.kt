@@ -51,6 +51,17 @@ class SignupActivity : AppCompatActivity() {
             //we need to show photo in button
 
         }
+
+        //call the action bar
+        val actionBar = supportActionBar
+        //show the back button in action bar
+        if (actionBar != null) {
+            //set action bar title
+            actionBar.title = "Sign up"
+            //set back button
+            actionBar.setDisplayHomeAsUpEnabled(true)
+        }
+
     }
 
 
@@ -177,6 +188,10 @@ class SignupActivity : AppCompatActivity() {
 
     private fun updateUI(user: FirebaseUser?) {
 
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }
