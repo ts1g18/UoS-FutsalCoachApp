@@ -56,6 +56,10 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
+
+    /*
+    * This method generates all of the messages in the team's chat from the firestore
+     */
     private fun generateMessageList() {
         fStore.collection("chat").get().addOnSuccessListener { result ->
             for (document in result) {
@@ -65,21 +69,33 @@ class ChatActivity : AppCompatActivity() {
                     document.data.get("time").toString()
                 )
                 chatMessageList += item
-
             }
+            //sort messages according to time sent so that they appear with the right order in the chat
+            chatMessageList.sortBy{it.time}
             recycler_view_chats.adapter = adapter
             recycler_view_chats.layoutManager =
                 LinearLayoutManager(this) //LinearLayoutManager creates vertical scrolling list
+            recycler_view_chats.scrollToPosition(chatMessageList.size - 1)
             recycler_view_chats.setHasFixedSize(true) //optimization
+
         }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting chats from firestore.", exception)
             }
     }
 
+    /*
+    * this method takes a message's content as a parameter, creates a new ChatMessage using the currently logged in user's uid and current time, and adds in the recycler view
+    * The new message is also written in the firestore database
+     */
     private fun sendMessage(message: String) {
         // The name of the document corresponding to the currently logged in user.
         val currentUserName = auth.currentUser!!.uid
+        val time = Date(Timestamp.now().seconds*1000).toLocaleString()
+        val newMessage = ChatMessage(message,currentUserName,time)
+        chatMessageList.add(newMessage)
+        recycler_view_chats.scrollToPosition(chatMessageList.size - 1)
+        adapter.notifyDataSetChanged()
         /*
         access the collection named "chat"
         this collection is a list of maps, with each map representing one chat message.
@@ -94,16 +110,19 @@ class ChatActivity : AppCompatActivity() {
                 hashMapOf(
                     "content" to message,
                     "sender" to currentUserName,
-                    "time" to Date(Timestamp.now().seconds*1000).toLocaleString()
+                    "time" to time
                 )
             )
             .addOnSuccessListener {
                 Log.d(TAG, "DocumentSnapshot successfully written!")
-                adapter.notifyDataSetChanged()
+
             }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
+    /*
+    * this method gets the user's id as a parameter and uses it to get the user's name and photo from database in order to load them in the widget bar above the chat
+     */
     private fun getUsernameAndPhoto(userId : String){
         fStore.collection("users").get().addOnSuccessListener{ result ->
             for (document in result){
