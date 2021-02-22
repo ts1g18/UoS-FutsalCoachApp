@@ -15,7 +15,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_captain_view_tactic.*
 import java.lang.Exception
 
-class ViewMembersActivity : AppCompatActivity() {
+class MemberViewMembersActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var fStore: FirebaseFirestore
     private val TAG = "ViewTacticActivity"
@@ -23,7 +23,7 @@ class ViewMembersActivity : AppCompatActivity() {
     private val adapter = MemberAdapter(memberList)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_members_activity)
+        setContentView(R.layout.activity_member_view_members_activity)
         //call the action bar
         val actionBar = supportActionBar
         //show the back button in action bar
@@ -81,7 +81,7 @@ class ViewMembersActivity : AppCompatActivity() {
                                     TAG,
                                     "DocumentSnapshot data: ${document.data}"
                                 )
-                                val intent = Intent(this@ViewMembersActivity, ProfileActivity::class.java)
+                                val intent = Intent(this@MemberViewMembersActivity, ProfileActivity::class.java)
                                 intent.putExtra("memberName", memberToView)
                                 startActivity(intent)
                             }

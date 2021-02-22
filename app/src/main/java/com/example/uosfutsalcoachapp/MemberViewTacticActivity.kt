@@ -15,16 +15,16 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_captain_view_tactic.*
 import java.lang.Exception
 
-class CaptainViewTacticActivity : AppCompatActivity() {
+class MemberViewTacticActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var fStore: FirebaseFirestore
-    private val TAG = "CaptainViewTacticActivity"
+    private val TAG = "MemberViewTacticActivity"
     private val tacticList = ArrayList<TacticItem>()
     private val adapter = TacticAdapter(tacticList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_captain_view_tactic)
+        setContentView(R.layout.activity_member_view_tactic)
         setTitle("Tactics")
         //call the action bar
         val actionBar = supportActionBar
@@ -42,23 +42,15 @@ class CaptainViewTacticActivity : AppCompatActivity() {
 
         generateTacticList()
 
-        val deleteTacticBtn : Button = findViewById(R.id.btnDeleteTactic)
-        deleteTacticBtn.setOnClickListener{
-            deleteTactic()
-        }
-
         val viewTacticBtn : Button = findViewById(R.id.btnViewTactic)
         viewTacticBtn.setOnClickListener{
             viewTactic()
         }
     }
 
-
-
-
     /*
-    * this method gets all of the tactics from the firestore and displays them in the recycler view list
-     */
+   * this method gets all of the tactics from the firestore and displays them in the recycler view list
+    */
     private fun generateTacticList() {
         fStore.collection("tactics").get().addOnSuccessListener { result ->
             for (document in result) {
@@ -77,40 +69,8 @@ class CaptainViewTacticActivity : AppCompatActivity() {
     }
 
     /*
-    * this method deletes the currently selected tactic
-     */
-    private fun deleteTactic() {
-        try {
-            //get the name of the tactic to be removed so that we can compare it wwith document.id from firestore and remove from dataabase as well
-            var tacticToBeRemoved = tacticList.get(adapter.getSelectedPosition()!!).text1
-            //remove it from list
-            tacticList.removeAt(adapter.getSelectedPosition()!!)
-            adapter.notifyItemRemoved(adapter.getSelectedPosition()!!)
-            fStore.collection("tactics").get().addOnSuccessListener { result ->
-                for (document in result) {
-                    if (document.id == tacticToBeRemoved) {
-                        fStore.collection("tactics").document(tacticToBeRemoved).delete()
-                            .addOnSuccessListener {
-                                Log.d(
-                                    TAG,
-                                    "DocumentSnapshot successfully deleted!"
-                                )
-                            }
-                            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
-                    }
-                }
-            }
-                .addOnFailureListener { exception ->
-                    Log.w(TAG, "Error getting documents.", exception)
-                }
-        }catch(e : Exception){
-            Toast.makeText(this,"No tactic is currently selected",Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    /*
-    * this method navigates the captain/member to the TacticActivity in order to demonstrate the movements of the currently selected tactic
-     */
+* this method navigates the captain/member to the TacticActivity in order to demonstrate the movements of the currently selected tactic
+ */
     private fun viewTactic() {
         try {
             //get the name of the tactic to be removed so that we can compare it wwith document.id from firestore and remove from dataabase as well
@@ -125,7 +85,7 @@ class CaptainViewTacticActivity : AppCompatActivity() {
                                     TAG,
                                     "DocumentSnapshot data: ${document.data}"
                                 )
-                                val intent = Intent(this@CaptainViewTacticActivity, TacticActivity::class.java)
+                                val intent = Intent(this@MemberViewTacticActivity, TacticActivity::class.java)
                                 intent.putExtra("tacticName", tacticToView)
                                 startActivity(intent)
                             }
@@ -137,15 +97,12 @@ class CaptainViewTacticActivity : AppCompatActivity() {
                     Log.w(TAG, "Error getting documents.", exception)
                 }
         }catch(e : Exception){
-            Toast.makeText(this,"No tactic is currently selected",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"No tactic is currently selected", Toast.LENGTH_SHORT).show()
         }
     }
-
-
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
-
 }

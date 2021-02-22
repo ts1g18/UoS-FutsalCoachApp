@@ -44,6 +44,24 @@ class MemberHomeScreenActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents.", exception)
             }
+
+        val btnViewTactics : Button = findViewById(R.id.btnMemberViewTactics)
+        btnViewTactics.setOnClickListener{
+            startActivity(Intent(this,MemberViewTacticActivity::class.java))
+        }
+
+        val btnViewMembers : Button = findViewById(R.id.btnMemberViewMembers)
+        btnViewMembers.setOnClickListener{
+            startActivity(Intent(this,MemberViewMembersActivity::class.java))
+        }
+
+        val btnChat : Button = findViewById(R.id.btnMemberChat)
+        btnChat.setOnClickListener{
+            startActivity(Intent(this,ChatActivity::class.java))
+        }
+
+
+
         val btnLogout : Button = findViewById(R.id.btnLogout)
         btnLogout.setOnClickListener{
             //log the current user out and redirect him to the login activity
@@ -54,14 +72,5 @@ class MemberHomeScreenActivity : AppCompatActivity() {
 
         }
 
-        val btnChat : Button = findViewById(R.id.btnMemberChat)
-        btnChat.setOnClickListener{
-            startActivity(Intent(this,ChatActivity::class.java))
-        }
-
-        val btnViewMembers : Button = findViewById(R.id.btnMemberViewMembers)
-        btnViewMembers.setOnClickListener{
-            startActivity(Intent(this,ViewMembersActivity::class.java))
-        }
     }
 }
