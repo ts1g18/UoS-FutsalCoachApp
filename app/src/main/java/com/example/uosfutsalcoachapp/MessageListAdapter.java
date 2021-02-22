@@ -1,19 +1,31 @@
 package com.example.uosfutsalcoachapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
 public class MessageListAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
-
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private List<ChatMessage> mMessageList;
 
     public MessageListAdapter(List<ChatMessage> messageList) {
@@ -26,7 +38,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     }
 
     public String getCurentUser() {
-        return "E7LObyaBNHTHGhhGSTCjAMzlBOH3";
+        String currentUser = auth.getCurrentUser().getUid();
+        return currentUser;
     }
 
     // Determines the appropriate ViewType according to the sender of the message.
@@ -106,11 +119,28 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         void bind(ChatMessage message) {
             messageText.setText(message.getContent());
-
+            //need to access the database in order to get the name of the user (since I used uid as the sender which is a unique id)
+            DocumentReference docRef = fStore.collection("users").document(message.getSender());
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("TAG", "DocumentSnapshot data: " + document.getData());
+                            nameText.setText(document.get("Full Name").toString());
+                        } else {
+                            Log.d("TAG", "No such document");
+                        }
+                    } else {
+                        Log.d("TAG", "get failed with ", task.getException());
+                    }
+                }
+            });
             // Format the stored timestamp into a readable String using method.
             timeText.setText(message.getTime().toString());
-
-            nameText.setText(message.getSender());
         }
     }
+
+
 }

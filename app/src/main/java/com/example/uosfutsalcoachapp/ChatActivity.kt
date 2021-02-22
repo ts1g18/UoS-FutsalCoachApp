@@ -11,7 +11,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.activity_profile.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -38,7 +40,10 @@ class ChatActivity : AppCompatActivity() {
         //set back button
         actionBar.setDisplayHomeAsUpEnabled(true)
 
+        getUsernameAndPhoto(auth.currentUser!!.uid)
+
         generateMessageList()
+
         btnSendMessage.setOnClickListener {
             val message = et_type_message.text.toString()
             //if user has not typed something but pressed send
@@ -54,7 +59,6 @@ class ChatActivity : AppCompatActivity() {
     private fun generateMessageList() {
         fStore.collection("chat").get().addOnSuccessListener { result ->
             for (document in result) {
-                println("++++++++++++ ${document.data.get("time")}")
                 val item = ChatMessage(
                     document.data.get("content") as String,
                     document.data.get("sender") as String,
@@ -67,7 +71,6 @@ class ChatActivity : AppCompatActivity() {
             recycler_view_chats.layoutManager =
                 LinearLayoutManager(this) //LinearLayoutManager creates vertical scrolling list
             recycler_view_chats.setHasFixedSize(true) //optimization
-//            chatMessageList.sortByDescending{it.time}
         }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting chats from firestore.", exception)
@@ -101,7 +104,16 @@ class ChatActivity : AppCompatActivity() {
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
-
+    private fun getUsernameAndPhoto(userId : String){
+        fStore.collection("users").get().addOnSuccessListener{ result ->
+            for (document in result){
+                if(document.id == userId){
+                    Picasso.get().load(document.data.get("User Photo").toString()).into(profile_image_chat)
+                    tv_username_chat.setText(document.get("Full Name").toString())
+                }
+            }
+        }
+    }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true

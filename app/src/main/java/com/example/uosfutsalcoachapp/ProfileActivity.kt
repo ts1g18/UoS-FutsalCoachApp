@@ -44,7 +44,6 @@ class ProfileActivity : AppCompatActivity() {
         val studentID : TextView = findViewById(R.id.tv_studentID)
 
         getMemberDetails(memberFullName,memberEmailID,studentID)
-        //val memberFullName : TextView = findViewById(R.id.tv_fullName)
     }
 
     /*
