@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,14 +11,20 @@
     <ImageView
         android:id="@+id/futsal_pitch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/futsal_pitch" />
+        app:srcCompat="@drawable/futsal_pitch2"
+        android:layout_above="@id/buttons"
+        />
 
-    <Button
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:clipToPadding="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnPreviewTactic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,9 +39,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/futsal_pitch" />
+        app:layout_constraintTop_toBottomOf="@+id/futsal_pitch"
+        />
+    </LinearLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/player1View"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -47,13 +52,14 @@
         android:background="@drawable/player_pin"
         android:minWidth="0dp"
         android:minHeight="0dp"
+        android:backgroundTint="#5F2D52"
         android:text="1"
         android:textColor="#FAFAFA"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/player2View"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -61,12 +67,13 @@
         android:layout_marginTop="92dp"
         android:background="@drawable/player_pin"
         android:text="2"
+        android:backgroundTint="#5F2D52"
         android:textColor="#FAFAFA"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/player3View"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -76,12 +83,13 @@
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:text="3"
+        android:backgroundTint="#5F2D52"
         android:textColor="#FAFAFA"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/player4View"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -91,12 +99,13 @@
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:text="4"
+        android:backgroundTint="#5F2D52"
         android:textColor="#FAFAFA"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/player5View"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -106,34 +115,34 @@
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:text="5"
+        android:backgroundTint="#5F2D52"
         android:textColor="#FAFAFA"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/ballView"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="188dp"
-        android:layout_marginTop="252dp"
+        android:layout_centerInParent="true"
         android:background="@drawable/player_pin"
+        android:backgroundTint="#FFFF00"
         android:minWidth="0dp"
         android:minHeight="0dp"
-        android:textColor="#FFFF00"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/opponent1View"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="288dp"
+        android:layout_marginTop="350dp"
         android:background="@drawable/player_pin"
-        android:backgroundTint="#9FE2BF"
+        android:backgroundTint="#006400"
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:text="1"
@@ -142,28 +151,28 @@
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/opponent2View"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="328dp"
+        android:layout_marginTop="390dp"
         android:background="@drawable/player_pin"
-        android:backgroundTint="#9FE2BF"
+        android:backgroundTint="#006400"
         android:text="2"
         android:textColor="#FAFAFA"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/opponent3View"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="368dp"
+        android:layout_marginTop="430dp"
         android:background="@drawable/player_pin"
-        android:backgroundTint="#9FE2BF"
+        android:backgroundTint="#006400"
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:text="3"
@@ -172,14 +181,14 @@
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/opponent4View"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="408dp"
+        android:layout_marginTop="470dp"
         android:background="@drawable/player_pin"
-        android:backgroundTint="#9FE2BF"
+        android:backgroundTint="#006400"
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:text="4"
@@ -188,14 +197,14 @@
         app:layout_constraintStart_toStartOf="@+id/futsal_pitch"
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/opponent5View"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="448dp"
+        android:layout_marginTop="510dp"
         android:background="@drawable/player_pin"
-        android:backgroundTint="#9FE2BF"
+        android:backgroundTint="#006400"
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:text="5"
@@ -205,5 +214,4 @@
         app:layout_constraintTop_toTopOf="@+id/futsal_pitch" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</RelativeLayout>
