@@ -3,7 +3,9 @@ package com.example.uosfutsalcoachapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -32,6 +34,8 @@ class HomeScreenActivity : AppCompatActivity() {
         if (user != null) {
             userID = user.uid
         }
+
+
        // val documentReference : DocumentReference = fStore.collection("users").document(userID)
         fStore.collection("users").get().addOnSuccessListener { result ->
                     for (document in result) {

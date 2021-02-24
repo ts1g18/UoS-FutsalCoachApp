@@ -9,10 +9,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.DragEvent
 import android.view.DragEvent.ACTION_DRAG_ENDED
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -28,15 +30,17 @@ import java.lang.Exception
 
 class CreateTacticActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-    private lateinit var docRef : DocumentReference
+    private lateinit var docRef: DocumentReference
     private val TAG = "CreateTacticActivity"
     val fStore = Firebase.firestore
+
     //these coordinates represent x y coordinates of the
-    var yCoord : Float = 0f
-    var xCoord : Float = 0f
+    var yCoord: Float = 0f
+    var xCoord: Float = 0f
+    val displayMetrics = DisplayMetrics()
     var currentFrame = Frame()
     var tactic = Tactic()
-    var frameCounter : Int = 0
+    var frameCounter: Int = 0
     val player1Pos = ArrayList<Pair<Float, Float>>()
     val player2Pos = ArrayList<Pair<Float, Float>>()
     val player3Pos = ArrayList<Pair<Float, Float>>()
@@ -47,18 +51,21 @@ class CreateTacticActivity : AppCompatActivity() {
     val opponent3Pos = ArrayList<Pair<Float, Float>>()
     val opponent4Pos = ArrayList<Pair<Float, Float>>()
     val opponent5Pos = ArrayList<Pair<Float, Float>>()
-    var clonePlayer1 = ArrayList<Pair<Float,Float>>()
-    var clonePlayer2 = ArrayList<Pair<Float,Float>>()
-    var clonePlayer3 = ArrayList<Pair<Float,Float>>()
-    var clonePlayer4 = ArrayList<Pair<Float,Float>>()
-    var clonePlayer5 = ArrayList<Pair<Float,Float>>()
-    var cloneBall = ArrayList<Pair<Float,Float>>()
-    var cloneOpponent1 = ArrayList<Pair<Float,Float>>()
-    var cloneOpponent2 = ArrayList<Pair<Float,Float>>()
-    var cloneOpponent3 = ArrayList<Pair<Float,Float>>()
-    var cloneOpponent4 = ArrayList<Pair<Float,Float>>()
-    var cloneOpponent5 = ArrayList<Pair<Float,Float>>()
-    val ballPos = ArrayList<Pair<Float,Float>>()
+    var clonePlayer1 = ArrayList<Pair<Float, Float>>()
+    var clonePlayer2 = ArrayList<Pair<Float, Float>>()
+    var clonePlayer3 = ArrayList<Pair<Float, Float>>()
+    var clonePlayer4 = ArrayList<Pair<Float, Float>>()
+    var clonePlayer5 = ArrayList<Pair<Float, Float>>()
+    var cloneBall = ArrayList<Pair<Float, Float>>()
+    var cloneOpponent1 = ArrayList<Pair<Float, Float>>()
+    var cloneOpponent2 = ArrayList<Pair<Float, Float>>()
+    var cloneOpponent3 = ArrayList<Pair<Float, Float>>()
+    var cloneOpponent4 = ArrayList<Pair<Float, Float>>()
+    var cloneOpponent5 = ArrayList<Pair<Float, Float>>()
+    val ballPos = ArrayList<Pair<Float, Float>>()
+    var deviceWidth = 0f
+    var deviceHeight = 0f
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,98 +73,103 @@ class CreateTacticActivity : AppCompatActivity() {
         //futsal pitch is the boundaries on which we can drag
         futsal_pitch.setOnDragListener(dragListener)
 
+        val windowsManager = applicationContext.getSystemService(WINDOW_SERVICE) as WindowManager
+        windowsManager.defaultDisplay.getMetrics(displayMetrics)
+        deviceWidth = displayMetrics.widthPixels.toFloat()
+        deviceHeight = displayMetrics.heightPixels.toFloat()
+
         //call the action bar
         val actionBar = supportActionBar
         //show the back button in action bar
-        if(actionBar != null){
+        if (actionBar != null) {
             //set action bar title
-                actionBar!!.title = "Create Tactic"
+            actionBar!!.title = "Create Tactic"
             //set back button
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
 
-        val player1 : Button = findViewById(R.id.player1)
-        player1.setOnLongClickListener{
+        val player1: Button = findViewById(R.id.player1)
+        player1.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
-        val player2 : Button = findViewById(R.id.player2)
-        player2.setOnLongClickListener{
+        val player2: Button = findViewById(R.id.player2)
+        player2.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
-        val player3 : Button = findViewById(R.id.player3)
-        player3.setOnLongClickListener{
-            val dragShadowBuilder = View.DragShadowBuilder(it)
-            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
-
-            it.visibility = View.INVISIBLE
-            true
-        }
-        val player4 : Button = findViewById(R.id.player4)
-        player4.setOnLongClickListener{
+        val player3: Button = findViewById(R.id.player3)
+        player3.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
 
             it.visibility = View.INVISIBLE
             true
         }
-        val player5 : Button = findViewById(R.id.player5)
-        player5.setOnLongClickListener{
+        val player4: Button = findViewById(R.id.player4)
+        player4.setOnLongClickListener {
+            val dragShadowBuilder = View.DragShadowBuilder(it)
+            it.startDragAndDrop(null, dragShadowBuilder, it, 0)
+
+            it.visibility = View.INVISIBLE
+            true
+        }
+        val player5: Button = findViewById(R.id.player5)
+        player5.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
-        val ball : Button = findViewById(R.id.ball)
-        ball.setOnLongClickListener{
+        val ball: Button = findViewById(R.id.ball)
+        ball.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
-        val opponent1 : Button = findViewById(R.id.opponent1)
-        opponent1.setOnLongClickListener{
+        val opponent1: Button = findViewById(R.id.opponent1)
+        opponent1.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
-        val opponent2 : Button = findViewById(R.id.opponent2)
-        opponent2.setOnLongClickListener{
+        val opponent2: Button = findViewById(R.id.opponent2)
+        opponent2.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
-        val opponent3 : Button = findViewById(R.id.opponent3)
-        opponent3.setOnLongClickListener{
+        val opponent3: Button = findViewById(R.id.opponent3)
+        opponent3.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
-        val opponent4 : Button = findViewById(R.id.opponent4)
-        opponent4.setOnLongClickListener{
+        val opponent4: Button = findViewById(R.id.opponent4)
+        opponent4.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
-        val opponent5 : Button = findViewById(R.id.opponent5)
-        opponent5.setOnLongClickListener{
+        val opponent5: Button = findViewById(R.id.opponent5)
+        opponent5.setOnLongClickListener {
             val dragShadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(null, dragShadowBuilder, it, 0)
             it.visibility = View.INVISIBLE
             true
         }
 
-        val captureFrameBtn : Button = findViewById(R.id.btnCaptureFrame)
-        captureFrameBtn.setOnClickListener{
+        val captureFrameBtn: Button = findViewById(R.id.btnCaptureFrame)
+        captureFrameBtn.setOnClickListener {
             storePlayerPos()
             //clone playerPositions array to avoid problem with reference overwriting existing values
             val clone = clone(currentFrame.getFrame())
@@ -165,7 +177,7 @@ class CreateTacticActivity : AppCompatActivity() {
             Toast.makeText(this, "Frame $frameCounter was captured.", Toast.LENGTH_SHORT).show()
             frameCounter++
         }
-        val previewTacticBtn : Button = findViewById(R.id.btnPreviewTactic)
+        val previewTacticBtn: Button = findViewById(R.id.btnPreviewTactic)
         previewTacticBtn.setOnClickListener {
             try {
                 generateListOfPlayerPositions()
@@ -188,16 +200,17 @@ class CreateTacticActivity : AppCompatActivity() {
             }
         }
 
-        val saveTacticBtn : Button = findViewById(R.id.btnSaveTactic)
+        val saveTacticBtn: Button = findViewById(R.id.btnSaveTactic)
         saveTacticBtn.setOnClickListener {
             createPopup()
         }
     }
+
     /*
     * this method clears all of the playerPos arrays
     * used when going back to previous activity to ensure that they are re-setted each time the player loads create tactic activity
      */
-    fun clearPlayerPosArrays(){
+    fun clearPlayerPosArrays() {
         player1Pos.clear()
         player2Pos.clear()
         player3Pos.clear()
@@ -210,32 +223,36 @@ class CreateTacticActivity : AppCompatActivity() {
         opponent4Pos.clear()
         opponent5Pos.clear()
     }
+
     /*
     * this method takes as an argument: a player (or ball) and the arraylist of all its points during the tactic
     * it then animates the player passed as argument from point to point in the sequence provided in the arraylist
      */
-    private fun movePlayer(player:Button,positions:ArrayList<Pair<Float,Float>>){
+    private fun movePlayer(player: Button, positions: ArrayList<Pair<Float, Float>>) {
         var id = 1
         val animEnd: AnimatorListenerAdapter = object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 id++
                 super.onAnimationEnd(animation)
                 if (id < positions.size) {
-                    player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2200).setListener(this)
-                }else{
+                    player.animate().x(positions.get(id).first).y(positions.get(id).second)
+                        .setDuration(2200).setListener(this)
+                } else {
                     clearPlayerPosArrays()
                 }
             }
 
         }
-        player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2200).setListener(animEnd)
+        player.animate().x(positions.get(id).first).y(positions.get(id).second).setDuration(2200)
+            .setListener(animEnd)
 
     }
+
     /*
      * this method resets the position of the player provided as argument to the initial one
      * it is used before previewing the tactic
      */
-    private fun resetPlayers(){
+    private fun resetPlayers() {
         try {
             player1.setX(player1Pos.get(0).first)
             player1.setY(player1Pos.get(0).second)
@@ -269,16 +286,17 @@ class CreateTacticActivity : AppCompatActivity() {
 
             opponent5.setX(opponent5Pos.get(0).first)
             opponent5.setY(opponent5Pos.get(0).second)
-        }catch (e : Exception){
-            Toast.makeText(this,"No frames captured!",Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "No frames captured!", Toast.LENGTH_SHORT).show()
         }
     }
-    private val dragListener = View.OnDragListener{ view, event ->
-        when(event.action){
+
+    private val dragListener = View.OnDragListener { view, event ->
+        when (event.action) {
             //in response to the user gesture to begin drag (long clin on player pin)
-                //the event with action type 'ACTION_DRAG_STARTED' should have a listener that uses the MIME type methods in clip descritpion
-                    //if the listener can accept a drop, it should return true to tell the system to continue to send drag events to the listener
-                        //if it returns false the system will stop sending drag events until it sends out 'ACTION_DRAG_ENDED'
+            //the event with action type 'ACTION_DRAG_STARTED' should have a listener that uses the MIME type methods in clip descritpion
+            //if the listener can accept a drop, it should return true to tell the system to continue to send drag events to the listener
+            //if it returns false the system will stop sending drag events until it sends out 'ACTION_DRAG_ENDED'
             DragEvent.ACTION_DRAG_STARTED -> {
                 true
             }
@@ -320,7 +338,11 @@ class CreateTacticActivity : AppCompatActivity() {
                     else -> {
                         val v = event.localState as View
                         v.visibility = View.VISIBLE
-                        Toast.makeText(this, "Keep the player within the pitch!", Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            this,
+                            "Keep the player within the pitch!",
+                            Toast.LENGTH_SHORT
+                        )
                     }
 
                 }.show()
@@ -330,32 +352,36 @@ class CreateTacticActivity : AppCompatActivity() {
             else -> false
         }
     }
+
     override fun onBackPressed() {
-            AlertDialog.Builder(this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("Go Back?")
-                    .setMessage("Are you sure you want to go back?")
-                    .setPositiveButton("Yes") { dialog, which -> finish()
-                        if(frameCounter>0) {
-                            Toast.makeText(this, "Tactic was not saved.", Toast.LENGTH_SHORT).show()
-                            tactic.getTactic().clear()
-                            currentFrame.getFrame().clear()
-                            clearPlayerPosArrays()
-                        }
-                    }
-                    .setNegativeButton("No", null)
-                    .show()
+        AlertDialog.Builder(this)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle("Go Back?")
+            .setMessage("Are you sure you want to go back?")
+            .setPositiveButton("Yes") { dialog, which ->
+                finish()
+                if (frameCounter > 0) {
+                    Toast.makeText(this, "Tactic was not saved.", Toast.LENGTH_SHORT).show()
+                    tactic.getTactic().clear()
+                    currentFrame.getFrame().clear()
+                    clearPlayerPosArrays()
+                }
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
+
     //when back is pressed go to previous activity
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
+
     /*
     * this method will be used to check which player pin is being moved and change the coordinates of that specific player in the hashmap with all player positions
     * it stores the position of all the player
      */
-    private fun storePlayerPos(){
+    private fun storePlayerPos() {
         val player1Coord = Pair(player1.x, player1.y)
         val player2Coord = Pair(player2.x, player2.y)
         val player3Coord = Pair(player3.x, player3.y)
@@ -384,44 +410,38 @@ class CreateTacticActivity : AppCompatActivity() {
     * this method loops through the tactic (frames mapped to (player,position) ) stores the position of each player in the appropriate arraylist in sequence
     * E.g. Stores in player1Pos arraylist the position of player 1 in frame 0 at index 0, frame 1 at index 1 etc.
      */
-    private fun generateListOfPlayerPositions(){
-        tactic.getTactic().forEach{ (frameNumber, frame)->
+    private fun generateListOfPlayerPositions() {
+        tactic.getTactic().forEach { (frameNumber, frame) ->
             val frame = tactic.getTactic().get(frameNumber)
             frame?.forEach { (player, playerPos) ->
-                if(player.toString().contains("player1")){
+                if (player.toString().contains("player1")) {
                     frame.get(player)?.let { it1 -> player1Pos.add(it1) }
-                } else if(player.toString().contains("player2")){
+                } else if (player.toString().contains("player2")) {
                     frame.get(player)?.let { it1 -> player2Pos.add(it1) }
-                }
-                else if(player.toString().contains("player3")){
+                } else if (player.toString().contains("player3")) {
                     frame.get(player)?.let { it1 -> player3Pos.add(it1) }
-                }
-                else if(player.toString().contains("player4")){
+                } else if (player.toString().contains("player4")) {
                     frame.get(player)?.let { it1 -> player4Pos.add(it1) }
-                }
-                else if(player.toString().contains("player5")){
+                } else if (player.toString().contains("player5")) {
                     frame.get(player)?.let { it1 -> player5Pos.add(it1) }
-                }else if(player.toString().contains("ball")){
+                } else if (player.toString().contains("ball")) {
                     frame.get(player)?.let { it1 -> ballPos.add(it1) }
-                }else if(player.toString().contains("opponent1")){
+                } else if (player.toString().contains("opponent1")) {
                     frame.get(player)?.let { it1 -> opponent1Pos.add(it1) }
-                }
-                else if(player.toString().contains("opponent2")){
-                frame.get(player)?.let { it1 -> opponent2Pos.add(it1) }
-                }
-                else if(player.toString().contains("opponent3")){
-                frame.get(player)?.let { it1 -> opponent3Pos.add(it1) }
-                }
-                else if(player.toString().contains("opponent4")) {
+                } else if (player.toString().contains("opponent2")) {
+                    frame.get(player)?.let { it1 -> opponent2Pos.add(it1) }
+                } else if (player.toString().contains("opponent3")) {
+                    frame.get(player)?.let { it1 -> opponent3Pos.add(it1) }
+                } else if (player.toString().contains("opponent4")) {
                     frame.get(player)?.let { it1 -> opponent4Pos.add(it1) }
-                }
-                else if(player.toString().contains("opponent5")) {
+                } else if (player.toString().contains("opponent5")) {
                     frame.get(player)?.let { it1 -> opponent5Pos.add(it1) }
                 }
             }
         }
         clonePlayerPos()
     }
+
     /*
     * this method is used to clone the playerPositions hashmap before storing in the tactics hashmap
     * this is because when trying to map the playerPositions Hashmap with the frames in the tactics hashmap the previous values in previous frames were overwritten
@@ -436,8 +456,9 @@ class CreateTacticActivity : AppCompatActivity() {
     /*
     * this method stores the tactic in the firestore database when clicking the save tactic button.
      */
-    private fun saveTactic(tacticName : String){
+    private fun saveTactic(tacticName: String) {
         val tactic = hashMapOf(
+            "screenSizeCreator" to Pair(deviceHeight,deviceWidth),
             "player1" to clonePlayer1,
             "player2" to clonePlayer2,
             "player3" to clonePlayer3,
@@ -450,9 +471,9 @@ class CreateTacticActivity : AppCompatActivity() {
             "opponent4" to cloneOpponent4,
             "opponent5" to cloneOpponent5,
 
-        )
+            )
 
-        val documentReference : DocumentReference = fStore.collection("tactics").document(tacticName)
+        val documentReference: DocumentReference = fStore.collection("tactics").document(tacticName)
         // Add a new document with a generated ID
         documentReference.set(tactic)
             .addOnSuccessListener { documentReference ->
@@ -463,20 +484,21 @@ class CreateTacticActivity : AppCompatActivity() {
             }
     }
 
-    private fun createPopup(){
+    private fun createPopup() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Save Tactic")
 
-        val view = layoutInflater.inflate(R.layout.layout_popup,null)
+        val view = layoutInflater.inflate(R.layout.layout_popup, null)
         val tacticName = view.findViewById<EditText>(R.id.tactic_name)
 
         builder.setView((view))
-        builder.setPositiveButton("Save", DialogInterface.OnClickListener{ _, _ ->
-            if(tacticName.text.toString().isEmpty()){
-                Toast.makeText(this,"Please enter a name for the tactic",Toast.LENGTH_SHORT).show()
-            }else {
+        builder.setPositiveButton("Save", DialogInterface.OnClickListener { _, _ ->
+            if (tacticName.text.toString().isEmpty()) {
+                Toast.makeText(this, "Please enter a name for the tactic", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
                 saveTactic(tacticName.text.toString())
-                Toast.makeText(this, "Tactic was saved successfuly!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Tactic was saved successfuly!", Toast.LENGTH_SHORT).show()
                 clearPlayerPosArrays()
                 tactic.getTactic().clear()
                 currentFrame.getFrame().clear()
@@ -484,20 +506,20 @@ class CreateTacticActivity : AppCompatActivity() {
                 finish()
             }
         })
-        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener{ _, _ -> })
+        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { _, _ -> })
         builder.show()
     }
 
     /*
     * clones all of the PlayerPos arrays so that they can be stored to database
      */
-    fun clonePlayerPos(){
+    fun clonePlayerPos() {
         clonePlayer1 = ArrayList(player1Pos)
         clonePlayer2 = ArrayList(player2Pos)
         clonePlayer3 = ArrayList(player3Pos)
         clonePlayer4 = ArrayList(player4Pos)
         clonePlayer5 = ArrayList(player5Pos)
-        cloneBall  = ArrayList(ballPos)
+        cloneBall = ArrayList(ballPos)
         cloneOpponent1 = ArrayList(opponent1Pos)
         cloneOpponent2 = ArrayList(opponent2Pos)
         cloneOpponent3 = ArrayList(opponent3Pos)
