@@ -29,46 +29,42 @@
         android:layout_alignParentBottom="true">
 
         <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnCaptureFrame"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#5F2D52"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:padding="12dp"
-        android:text="Capture Frame"
-        android:textColor="#FAFAFA"
-        android:textSize="16sp"
-        android:layout_weight="1"
-        />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnPreviewTactic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#5F2D52"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:padding="12dp"
-        android:text="Preview Tactic"
-        android:textColor="#FAFAFA"
-        android:textSize="16sp"
-        android:layout_weight="1"
-       />
+            android:id="@+id/btnCaptureFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#5F2D52"
+            android:padding="12dp"
+            android:text="Capture Frame"
+            android:textColor="#FAFAFA"
+            android:textSize="16sp"
+            android:layout_margin="1dp"
+            />
 
         <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnSaveTactic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#5F2D52"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:padding="12dp"
-        android:text="Save tactic"
-        android:textColor="#FAFAFA"
-        android:textSize="16sp"
-        android:layout_weight="1"
-        />
+            android:id="@+id/btnPreviewTactic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#5F2D52"
+            android:padding="12dp"
+            android:layout_margin="1dp"
+            android:text="Preview Tactic"
+            android:textColor="#FAFAFA"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSaveTactic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#5F2D52"
+            android:padding="12dp"
+            android:layout_margin="1dp"
+            android:text="Save tactic"
+            android:textColor="#FAFAFA"
+            android:textSize="16sp" />
+
 
     </LinearLayout>
 
