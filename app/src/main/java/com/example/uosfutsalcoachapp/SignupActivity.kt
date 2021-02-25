@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -26,11 +27,12 @@ class SignupActivity : AppCompatActivity() {
 
     //declare instance of FirebaseAuth
     private lateinit var auth: FirebaseAuth
-    val fStore = Firebase.firestore
+    private lateinit var fStore : FirebaseFirestore
     var userID = ""
     private val TAG = "SignupActivity"
     private var selectedPhotoUri: Uri? = null
     private var imageUrl: String? = ""
+    private var role: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -38,6 +40,7 @@ class SignupActivity : AppCompatActivity() {
         setContentView(R.layout.activity_signup)
         // Initialize Firebase Auth
         auth = Firebase.auth
+        fStore = Firebase.firestore
         val btnSignUp: Button = findViewById(R.id.btnSignUp)
         btnSignUp.setOnClickListener {
             uploadImageAndRegister()
@@ -131,12 +134,18 @@ class SignupActivity : AppCompatActivity() {
 //                                uploadImageToFirebaseStorage()
                                 Toast.makeText(baseContext,"Signed up successfuly. A verification email has been sent to your email address",Toast.LENGTH_SHORT).show()
                                 userID = user.uid
+                                if(username.text.toString() == "ts1g18@soton.ac.uk"){
+                                    role = "Team Captain"
+                                }else{
+                                    role = "Team Member"
+                                }
                                 // Create a new user with a fullname and username(emailID) and student id
                                 val user = hashMapOf(
                                     "Full Name" to fullName.text.toString(),
                                     "Email ID" to username.text.toString(),
                                     "Student ID" to studentID.text.toString(),
-                                    "User Photo" to imageUrl
+                                    "User Photo" to imageUrl,
+                                    "Role" to role
                                 )
                                 val documentReference: DocumentReference =
                                     fStore.collection("users").document(userID)

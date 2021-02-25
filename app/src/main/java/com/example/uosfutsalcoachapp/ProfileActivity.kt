@@ -42,14 +42,15 @@ class ProfileActivity : AppCompatActivity() {
         val memberFullName : TextView = findViewById(R.id.tv_fullName)
         val memberEmailID : TextView = findViewById(R.id.tv_emailID)
         val studentID : TextView = findViewById(R.id.tv_studentID)
+        val role : TextView = findViewById(R.id.tv_role)
 
-        getMemberDetails(memberFullName,memberEmailID,studentID)
+        getMemberDetails(memberFullName,memberEmailID,studentID,role)
     }
 
     /*
 * this method navigates the captain/member to the memberActivity in order to show the details/profile of a team member
 */
-    private fun getMemberDetails(memberFullName:TextView, memberEmail : TextView, studentID : TextView) {
+    private fun getMemberDetails(memberFullName:TextView, memberEmail : TextView, studentID : TextView, role : TextView) {
         try {
             fStore.collection("users").get().addOnSuccessListener { result ->
                 for (document in result) {
@@ -57,7 +58,8 @@ class ProfileActivity : AppCompatActivity() {
                         Picasso.get().load(document.data.get("User Photo").toString()).into(memberPicture)
                         memberFullName.text = "Full Name: ${document.data.get("Full Name") as CharSequence?}"
                         memberEmail.text = "Email ID: ${document.data.get("Email ID") as CharSequence?}"
-                        studentID.text = "Student ID: ${document.data.get("studentID") as CharSequence?}"
+                        studentID.text = "Student ID: ${document.data.get("Student ID") as CharSequence?}"
+                        role.text = "Role: ${document.data.get("Role") as CharSequence?}"
                         fStore.collection("users").document(memberName).get()
                             .addOnSuccessListener {
                                 Log.d(
