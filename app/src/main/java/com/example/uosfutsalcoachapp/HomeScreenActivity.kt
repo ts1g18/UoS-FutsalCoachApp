@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
@@ -20,6 +22,7 @@ class HomeScreenActivity : AppCompatActivity() {
     private lateinit var fStore : FirebaseFirestore
     private val TAG = "HomeScreenActivity"
     var userID = ""
+    var userName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +45,7 @@ class HomeScreenActivity : AppCompatActivity() {
                         Log.d(TAG, "${userID} => ${document.data}")
                         if(userID == document.id){
                             welcomeMsg.setText("Welcome ${document.data.get("Full Name").toString()}")
+                            userName = document.data.get("Full Name").toString()
                         }
                     }
                 }
@@ -50,12 +54,7 @@ class HomeScreenActivity : AppCompatActivity() {
                 }
         val btnLogout : Button = findViewById(R.id.btnLogout)
         btnLogout.setOnClickListener{
-            //log the current user out and redirect him to the login activity
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(baseContext, "Logged out successfuly.", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-
+           logout()
         }
 
         //create tactic
@@ -81,5 +80,31 @@ class HomeScreenActivity : AppCompatActivity() {
         btnChat.setOnClickListener{
             startActivity(Intent(this,ChatActivity::class.java))
         }
+    }
+
+    //log the current user out and redirect him to the login activity
+    private fun logout(){
+        FirebaseAuth.getInstance().signOut();
+        Toast.makeText(baseContext, "Logged out successfuly.", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        var id = item.itemId
+        if (id == R.id.view_my_profile){
+            val intent = Intent(this@HomeScreenActivity, ProfileActivity::class.java)
+            intent.putExtra("memberName", userName)
+            startActivity(intent)
+            return true
+        } else if(id == R.id.log_out){
+            logout()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        //innflate the menu; this adds items to action bar if present
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 }

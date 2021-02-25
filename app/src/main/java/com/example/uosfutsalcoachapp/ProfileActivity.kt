@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
@@ -82,5 +84,29 @@ class ProfileActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        var id = item.itemId
+        if (id == R.id.edit_profile){
+            //TODO must make details editable and have a save button to change details
+            return true
+        } else if(id == R.id.log_out_profile){
+            logout()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        //innflate the menu; this adds items to action bar if present
+        menuInflater.inflate(R.menu.menu_main_profile, menu)
+        return true
+    }
+    //log the current user out and redirect him to the login activity
+    private fun logout(){
+        FirebaseAuth.getInstance().signOut();
+        Toast.makeText(baseContext, "Logged out successfuly.", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 }
