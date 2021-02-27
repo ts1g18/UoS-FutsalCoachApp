@@ -21,6 +21,7 @@ class MemberViewMembersActivity : AppCompatActivity() {
     private val TAG = "ViewTacticActivity"
     private val memberList = ArrayList<MemberItem>()
     private val adapter = MemberAdapter(memberList)
+    var isMe = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_member_view_members_activity)
@@ -70,6 +71,7 @@ class MemberViewMembersActivity : AppCompatActivity() {
    */
     private fun viewMember() {
         try {
+
             //get the name of the member to be removed so that we can compare it wwith document.id from firestore and remove from database as well
             var memberToView = memberList.get(adapter.getSelectedPosition()!!).text1
             fStore.collection("users").get().addOnSuccessListener { result ->
@@ -81,8 +83,10 @@ class MemberViewMembersActivity : AppCompatActivity() {
                                     TAG,
                                     "DocumentSnapshot data: ${document.data}"
                                 )
+                                isMe = document.id == auth.currentUser?.uid
                                 val intent = Intent(this@MemberViewMembersActivity, ProfileActivity::class.java)
                                 intent.putExtra("memberName", memberToView)
+                                intent.putExtra("isMe", isMe.toString())
                                 startActivity(intent)
                             }
                             .addOnFailureListener { e -> Log.w(TAG, "No such document", e) }
@@ -101,4 +105,5 @@ class MemberViewMembersActivity : AppCompatActivity() {
         onBackPressed()
         return true
     }
+
 }

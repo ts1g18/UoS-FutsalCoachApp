@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/selectphoto_imageview_edit"
+        app:civ_border_width="4dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="@+id/memberPictureEdit"
+        app:layout_constraintEnd_toEndOf="@+id/memberPictureEdit"
+        app:layout_constraintStart_toStartOf="@+id/memberPictureEdit"
+        app:layout_constraintTop_toTopOf="@+id/memberPictureEdit"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/memberPictureEdit"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="80dp"
+        android:background="@drawable/rounded_select_photo"
+        app:layout_constraintBottom_toTopOf="@+id/tv_fullName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/memberPictureOutlineEdit"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:civ_border_width="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/memberPicture"
+        app:layout_constraintStart_toStartOf="@+id/memberPictureEdit"
+        app:layout_constraintTop_toTopOf="@+id/memberPictureEdit"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/tv_fullNameEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Enter full name"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/memberPictureEdit" />
+
+    <TextView
+        android:id="@+id/tv_emailIDEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="Email ID: "
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_fullNameEdit" />
+
+    <EditText
+        android:id="@+id/tv_studentIDEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:hint="Enter student ID"
+        android:textSize="20sp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_emailIDEdit" />
+
+    <TextView
+        android:id="@+id/tv_roleEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="Role: "
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_studentIDEdit" />
+
+    <Button
+        android:id="@+id/btnSaveEditDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_roleEdit"
+     />
+</androidx.constraintlayout.widget.ConstraintLayout>

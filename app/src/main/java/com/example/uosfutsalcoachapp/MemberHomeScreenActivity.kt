@@ -22,6 +22,11 @@ class MemberHomeScreenActivity : AppCompatActivity() {
     private val TAG = "HomeScreenActivity"
     var userID = ""
     var userName = ""
+    var role = ""
+    var studentId = ""
+    var emailId = ""
+    var userPhoto = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_member_home_screen)

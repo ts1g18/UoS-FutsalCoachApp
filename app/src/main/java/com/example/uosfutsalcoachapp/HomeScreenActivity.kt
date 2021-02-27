@@ -23,6 +23,10 @@ class HomeScreenActivity : AppCompatActivity() {
     private val TAG = "HomeScreenActivity"
     var userID = ""
     var userName = ""
+    var role = ""
+    var studentId = ""
+    var emailId = ""
+    var userPhoto = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +50,11 @@ class HomeScreenActivity : AppCompatActivity() {
                         if(userID == document.id){
                             welcomeMsg.setText("Welcome ${document.data.get("Full Name").toString()}")
                             userName = document.data.get("Full Name").toString()
+                            emailId =  document.data.get("Email ID").toString()
+                            studentId = document.data.get("Student ID").toString()
+                            role =  document.data.get("Role").toString()
+                            userPhoto =  document.data.get("User Photo").toString()
+
                         }
                     }
                 }
@@ -106,5 +115,28 @@ class HomeScreenActivity : AppCompatActivity() {
         //innflate the menu; this adds items to action bar if present
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    override fun onResume() {
+        val welcomeMsg : TextView = findViewById(R.id.tv_welcome)
+        // val documentReference : DocumentReference = fStore.collection("users").document(userID)
+        fStore.collection("users").get().addOnSuccessListener { result ->
+            for (document in result) {
+                Log.d(TAG, "${userID} => ${document.data}")
+                if(userID == document.id){
+                    welcomeMsg.setText("Welcome ${document.data.get("Full Name").toString()}")
+                    userName = document.data.get("Full Name").toString()
+                    emailId =  document.data.get("Email ID").toString()
+                    studentId = document.data.get("Student ID").toString()
+                    role =  document.data.get("Role").toString()
+                    userPhoto =  document.data.get("User Photo").toString()
+
+                }
+            }
+        }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
+        super.onResume()
     }
 }

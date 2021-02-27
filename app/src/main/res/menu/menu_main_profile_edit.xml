@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/view_my_profile"
-        android:icon="@drawable/ic_member_icon_action_bar"
-        android:title="View Profile"
-        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/save_details"
+        android:title="Save"
+        app:showAsAction="never"/>
 
-    <item android:id="@+id/log_out"
+
+    <item android:id="@+id/log_out_profile"
         android:title="Log out"
         app:showAsAction="never"/>
 </menu>

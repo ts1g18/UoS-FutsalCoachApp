@@ -23,7 +23,7 @@
         android:id="@+id/memberPictureOutline"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:civ_border_width="8dp"
+        app:civ_border_width="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/memberPicture"
         app:layout_constraintStart_toStartOf="@+id/memberPicture"
         app:layout_constraintTop_toTopOf="@+id/memberPicture"
