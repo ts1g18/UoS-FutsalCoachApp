@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UoSFutsalCoachApp">
-        <activity android:name=".EditProfileActivity"></activity>
+        <activity android:name=".EditTacticActivity"></activity>
+        <activity android:name=".EditProfileActivity" />
         <activity android:name=".MemberViewTacticActivity" />
         <activity android:name=".MemberViewMembersActivity" />
         <activity android:name=".ChatActivity" />

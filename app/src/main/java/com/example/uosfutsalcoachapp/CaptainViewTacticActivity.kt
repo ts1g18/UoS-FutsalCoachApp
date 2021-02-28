@@ -53,9 +53,13 @@ class CaptainViewTacticActivity : AppCompatActivity() {
         viewTacticBtn.setOnClickListener{
             viewTactic()
         }
+
+        val editTacticBtn : Button = findViewById(R.id.btnEditTactic)
+        editTacticBtn.setOnClickListener{
+            goToEditTacticScreen()
+        }
+
     }
-
-
 
 
     /*
@@ -109,6 +113,38 @@ class CaptainViewTacticActivity : AppCompatActivity() {
             Toast.makeText(this,"No tactic is currently selected",Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun goToEditTacticScreen(){
+        try {
+            //get the name of the tactic to be removed so that we can compare it wwith document.id from firestore and remove from dataabase as well
+            var tacticToView = tacticList.get(adapter.getSelectedPosition()!!).text1
+
+            fStore.collection("tactics").get().addOnSuccessListener { result ->
+                for (document in result) {
+                    if (document.id == tacticToView) {
+                        fStore.collection("tactics").document(tacticToView).get()
+                            .addOnSuccessListener {
+                                Log.d(
+                                    TAG,
+                                    "DocumentSnapshot data: ${document.data}"
+                                )
+                                val intent = Intent(this@CaptainViewTacticActivity, EditTacticActivity::class.java)
+                                intent.putExtra("tacticName", tacticToView)
+                                startActivity(intent)
+                            }
+                            .addOnFailureListener { e -> Log.w(TAG, "No such document", e) }
+                    }
+                }
+            }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents.", exception)
+                }
+        }catch(e : Exception){
+            Toast.makeText(this,"No tactic is currently selected",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 
     /*
     * this method navigates the captain/member to the TacticActivity in order to demonstrate the movements of the currently selected tactic

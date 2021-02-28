@@ -21,6 +21,7 @@ class CaptainViewMembersActivity : AppCompatActivity() {
     private val TAG = "CaptainViewTacticActivity"
     private val memberList = ArrayList<MemberItem>()
     private val adapter = MemberAdapter(memberList)
+    private var isMe = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,8 +120,10 @@ class CaptainViewMembersActivity : AppCompatActivity() {
                                     TAG,
                                     "DocumentSnapshot data: ${document.data}"
                                 )
+                                isMe = document.id == auth.currentUser?.uid
                                 val intent = Intent(this@CaptainViewMembersActivity, ProfileActivity::class.java)
                                 intent.putExtra("memberName", memberToView)
+                                intent.putExtra("isMe", isMe.toString())
                                 startActivity(intent)
                             }
                             .addOnFailureListener { e -> Log.w(TAG, "No such document", e) }

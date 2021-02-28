@@ -27,16 +27,25 @@
             android:id="@+id/btnViewTactic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="View Tactic"
-            android:layout_weight="1"/>
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnEditTactic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit Tactic"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/btnDeleteTactic"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete Tactic"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            />
+            android:text="Delete Tactic"
+            android:textSize="12sp" />
 
 
     </LinearLayout>
