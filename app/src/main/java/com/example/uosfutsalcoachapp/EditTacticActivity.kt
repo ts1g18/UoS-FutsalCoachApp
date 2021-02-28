@@ -13,8 +13,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -44,12 +46,15 @@ class EditTacticActivity : AppCompatActivity() {
     var screenRatioWidth = 0f
     var diffScreenSize = false
     var currentFrame = 0
+
     //these coordinates represent x y coordinates of the
     var yCoord: Float = 0f
     var xCoord: Float = 0f
     var deviceWidth = 0f
     var deviceHeight = 0f
     val displayMetrics = DisplayMetrics()
+    var frameToDeleteFromMenu = ""
+
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -160,59 +165,70 @@ class EditTacticActivity : AppCompatActivity() {
             true
         }
 
-        val btnUpdateFrame : Button = findViewById(R.id.btnUpdateFrame)
-        btnUpdateFrame.setOnClickListener{
+        val btnUpdateFrame: Button = findViewById(R.id.btnUpdateFrame)
+        btnUpdateFrame.setOnClickListener {
             changePosOfAllPlayersInFrame()
         }
 
-        val btnSaveTacticEdit : Button = findViewById(R.id.btnSaveTacticEdit)
-        btnSaveTacticEdit.setOnClickListener{
+        val btnSaveTacticEdit: Button = findViewById(R.id.btnSaveTacticEdit)
+        btnSaveTacticEdit.setOnClickListener {
             createPopup()
         }
 
+        val btnDeleteFrame: Button = findViewById(R.id.btnDeleteFrame)
+        btnDeleteFrame.setOnClickListener {
+            deleteCurrentFrame()
+        }
+
+        val btnAddFrame: Button = findViewById(R.id.btnAddFrame)
+        btnAddFrame.setOnClickListener {
+
+        }
+
     }
+
     /*
     * this method changes the position of the players in the current frame (updates the frame)
      */
     private fun changePosOfAllPlayersInFrame() {
-        var newPlayer1Pos = Pair(player1Edit.getX(),player1Edit.getY())
-        player1Pos.set(currentFrame,newPlayer1Pos)
+        var newPlayer1Pos = Pair(player1Edit.getX(), player1Edit.getY())
+        player1Pos.set(currentFrame, newPlayer1Pos)
 
-        var newPlayer2Pos = Pair(player2Edit.getX(),player2Edit.getY())
-        player2Pos.set(currentFrame,newPlayer2Pos)
+        var newPlayer2Pos = Pair(player2Edit.getX(), player2Edit.getY())
+        player2Pos.set(currentFrame, newPlayer2Pos)
 
-        var newPlayer3Pos = Pair(player3Edit.getX(),player3Edit.getY())
-        player3Pos.set(currentFrame,newPlayer3Pos)
+        var newPlayer3Pos = Pair(player3Edit.getX(), player3Edit.getY())
+        player3Pos.set(currentFrame, newPlayer3Pos)
 
-        var newPlayer4Pos = Pair(player4Edit.getX(),player4Edit.getY())
-        player4Pos.set(currentFrame,newPlayer4Pos)
+        var newPlayer4Pos = Pair(player4Edit.getX(), player4Edit.getY())
+        player4Pos.set(currentFrame, newPlayer4Pos)
 
-        var newPlayer5Pos = Pair(player5Edit.getX(),player5Edit.getY())
-        player5Pos.set(currentFrame,newPlayer5Pos)
+        var newPlayer5Pos = Pair(player5Edit.getX(), player5Edit.getY())
+        player5Pos.set(currentFrame, newPlayer5Pos)
 
-        var newBallPos = Pair(ballEdit.getX(),ballEdit.getY())
-        ballPos.set(currentFrame,newBallPos)
+        var newBallPos = Pair(ballEdit.getX(), ballEdit.getY())
+        ballPos.set(currentFrame, newBallPos)
 
-        var newOpponent1Pos = Pair(opponent1Edit.getX(),opponent1Edit.getY())
-        opponent1Pos.set(currentFrame,newOpponent1Pos)
+        var newOpponent1Pos = Pair(opponent1Edit.getX(), opponent1Edit.getY())
+        opponent1Pos.set(currentFrame, newOpponent1Pos)
 
-        var newOpponent2Pos = Pair(opponent2Edit.getX(),opponent2Edit.getY())
-        opponent2Pos.set(currentFrame,newOpponent2Pos)
+        var newOpponent2Pos = Pair(opponent2Edit.getX(), opponent2Edit.getY())
+        opponent2Pos.set(currentFrame, newOpponent2Pos)
 
-        var newOpponent3Pos = Pair(opponent3Edit.getX(),opponent3Edit.getY())
-        opponent3Pos.set(currentFrame,newOpponent3Pos)
+        var newOpponent3Pos = Pair(opponent3Edit.getX(), opponent3Edit.getY())
+        opponent3Pos.set(currentFrame, newOpponent3Pos)
 
-        var newOpponent4Pos = Pair(opponent4Edit.getX(),opponent4Edit.getY())
-        opponent4Pos.set(currentFrame,newOpponent4Pos)
+        var newOpponent4Pos = Pair(opponent4Edit.getX(), opponent4Edit.getY())
+        opponent4Pos.set(currentFrame, newOpponent4Pos)
 
-        var newOpponent5Pos = Pair(opponent5Edit.getX(),opponent5Edit.getY())
-        opponent5Pos.set(currentFrame,newOpponent5Pos)
+        var newOpponent5Pos = Pair(opponent5Edit.getX(), opponent5Edit.getY())
+        opponent5Pos.set(currentFrame, newOpponent5Pos)
     }
 
     /*
     * this method saves the updated tactic (updated frames) in the firestore
      */
-    private fun createPopup(){
+    private fun createPopup() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Save Tactic")
 
@@ -236,12 +252,13 @@ class EditTacticActivity : AppCompatActivity() {
         builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { _, _ -> })
         builder.show()
     }
+
     /*
     * this method stores the tactic in the firestore database when clicking the save tactic button.
     */
     private fun saveTactic(updatedTacticName: String) {
         val updatedTactic = hashMapOf(
-            "screenSizeCreator" to Pair(deviceHeight,deviceWidth),
+            "screenSizeCreator" to Pair(deviceHeight, deviceWidth),
             "player1" to player1Pos,
             "player2" to player2Pos,
             "player3" to player3Pos,
@@ -256,8 +273,9 @@ class EditTacticActivity : AppCompatActivity() {
 
             )
 
-        val documentReference: DocumentReference = fStore.collection("tactics").document(updatedTacticName) //needs to overwrite current tactic
-        if(updatedTacticName == tacticName) {
+        val documentReference: DocumentReference = fStore.collection("tactics")
+            .document(updatedTacticName) //needs to overwrite current tactic
+        if (updatedTacticName == tacticName) {
             // Add a new document with a generated ID
             documentReference.set(updatedTactic)
                 .addOnSuccessListener { documentReference ->
@@ -266,7 +284,7 @@ class EditTacticActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error adding document", e)
                 }
-        }else {
+        } else {
             deleteOldTactic()
             // Add a new document with a generated ID
             documentReference.set(updatedTactic)
@@ -279,6 +297,9 @@ class EditTacticActivity : AppCompatActivity() {
         }
     }
 
+    /*
+    * this method deletes the old tactic
+     */
     private fun deleteOldTactic() {
         fStore.collection("tactics").get().addOnSuccessListener { result ->
             for (document in result) {
@@ -299,131 +320,239 @@ class EditTacticActivity : AppCompatActivity() {
             }
     }
 
+    private fun deleteCurrentFrame() {
+        player1Pos.removeAt(currentFrame)
+        player2Pos.removeAt(currentFrame)
+        player3Pos.removeAt(currentFrame)
+        player4Pos.removeAt(currentFrame)
+        player5Pos.removeAt(currentFrame)
+        ballPos.removeAt(currentFrame)
+        opponent1Pos.removeAt(currentFrame)
+        opponent2Pos.removeAt(currentFrame)
+        opponent3Pos.removeAt(currentFrame)
+        opponent4Pos.removeAt(currentFrame)
+        opponent5Pos.removeAt(currentFrame)
+        if(currentFrame < player1Pos.size) {
+            setPlayersPosPerFrame(player1Edit, player1Pos, currentFrame)
+            setPlayersPosPerFrame(player2Edit, player2Pos, currentFrame)
+            setPlayersPosPerFrame(player3Edit, player3Pos, currentFrame)
+            setPlayersPosPerFrame(player4Edit, player4Pos, currentFrame)
+            setPlayersPosPerFrame(player5Edit, player5Pos, currentFrame)
+            setPlayersPosPerFrame(ballEdit, ballPos, currentFrame)
+            setPlayersPosPerFrame(opponent1Edit, opponent1Pos, currentFrame)
+            setPlayersPosPerFrame(opponent2Edit, opponent2Pos, currentFrame)
+            setPlayersPosPerFrame(opponent3Edit, opponent3Pos, currentFrame)
+            setPlayersPosPerFrame(opponent4Edit, opponent4Pos, currentFrame)
+            setPlayersPosPerFrame(opponent5Edit, opponent5Pos, currentFrame)
+        }else{
+            setPlayersPosPerFrame(player1Edit, player1Pos, currentFrame-1)
+            setPlayersPosPerFrame(player2Edit, player2Pos, currentFrame-1)
+            setPlayersPosPerFrame(player3Edit, player3Pos, currentFrame-1)
+            setPlayersPosPerFrame(player4Edit, player4Pos, currentFrame-1)
+            setPlayersPosPerFrame(player5Edit, player5Pos, currentFrame-1)
+            setPlayersPosPerFrame(ballEdit, ballPos, currentFrame-1)
+            setPlayersPosPerFrame(opponent1Edit, opponent1Pos, currentFrame-1)
+            setPlayersPosPerFrame(opponent2Edit, opponent2Pos, currentFrame-1)
+            setPlayersPosPerFrame(opponent3Edit, opponent3Pos, currentFrame-1)
+            setPlayersPosPerFrame(opponent4Edit, opponent4Pos, currentFrame-1)
+            setPlayersPosPerFrame(opponent5Edit, opponent5Pos, currentFrame-1)
+        }
+    }
 
-    private fun setPlayersPosPerFrame(player: Button, playerPosList: ArrayList<Pair<Float, Float>>, frame: Int){
+
+    private fun setPlayersPosPerFrame(
+        player: Button,
+        playerPosList: ArrayList<Pair<Float, Float>>,
+        frame: Int
+    ) {
         player.setX(playerPosList.get(frame).first)
         player.setY(playerPosList.get(frame).second)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var itemTitle = item.title
-        when (itemTitle) {
-            "Frame 0" -> {
-                currentFrame = 0
-                setPlayersPosPerFrame(player1Edit,player1Pos,0)
-                setPlayersPosPerFrame(player2Edit,player2Pos,0)
-                setPlayersPosPerFrame(player3Edit,player3Pos,0)
-                setPlayersPosPerFrame(player4Edit,player4Pos,0)
-                setPlayersPosPerFrame(player5Edit,player5Pos,0)
-                setPlayersPosPerFrame(ballEdit,ballPos,0)
-                setPlayersPosPerFrame(opponent1Edit,opponent1Pos,0)
-                setPlayersPosPerFrame(opponent2Edit,opponent2Pos,0)
-                setPlayersPosPerFrame(opponent3Edit,opponent3Pos,0)
-                setPlayersPosPerFrame(opponent4Edit,opponent4Pos,0)
-                setPlayersPosPerFrame(opponent5Edit,opponent5Pos,0)
-                return true
+        try {
+            when (itemTitle) {
+                "Frame 0" -> {
+                    currentFrame = 0
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 0)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 0)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 0)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 0)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 0)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 0)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 0)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 0)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 0)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 0)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 0)
+                    return true
+                }
+                "Frame 1" -> {
+                    currentFrame = 1
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 1)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 1)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 1)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 1)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 1)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 1)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 1)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 1)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 1)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 1)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 1)
+                    return true
+                }
+                "Frame 2" -> {
+                    currentFrame = 2
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 2)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 2)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 2)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 2)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 2)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 2)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 2)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 2)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 2)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 2)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 2)
+                    return true
+                }
+                "Frame 3" -> {
+                    currentFrame = 3
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 3)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 3)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 3)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 3)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 3)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 3)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 3)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 3)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 3)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 3)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 3)
+                    return true
+                }
+                "Frame 4" -> {
+                    currentFrame = 4
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 4)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 4)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 4)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 4)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 4)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 4)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 4)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 4)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 4)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 4)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 4)
+                    return true
+                }
+                "Frame 5" -> {
+                    currentFrame = 5
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 5)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 5)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 5)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 5)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 5)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 5)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 5)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 5)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 5)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 5)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 5)
+                    return true
+                }
+                "Frame 6" -> {
+                    currentFrame = 6
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 6)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 6)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 6)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 6)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 6)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 6)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 6)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 6)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 6)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 6)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 6)
+                    return true
+                }
+                "Frame 6" -> {
+                    currentFrame = 7
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 7)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 7)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 7)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 7)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 7)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 7)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 7)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 7)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 7)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 7)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 7)
+                    return true
+                }
+                "Frame 6" -> {
+                    currentFrame = 8
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 8)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 8)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 8)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 8)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 8)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 8)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 8)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 8)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 8)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 8)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 8)
+                    return true
+                }
+                "Frame 6" -> {
+                    currentFrame = 9
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 9)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 9)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 9)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 9)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 9)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 9)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 9)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 9)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 9)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 9)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 9)
+                    return true
+                }
+                "Frame 10" -> {
+                    currentFrame = 10
+                    setPlayersPosPerFrame(player1Edit, player1Pos, 10)
+                    setPlayersPosPerFrame(player2Edit, player2Pos, 10)
+                    setPlayersPosPerFrame(player3Edit, player3Pos, 10)
+                    setPlayersPosPerFrame(player4Edit, player4Pos, 10)
+                    setPlayersPosPerFrame(player5Edit, player5Pos, 10)
+                    setPlayersPosPerFrame(ballEdit, ballPos, 10)
+                    setPlayersPosPerFrame(opponent1Edit, opponent1Pos, 10)
+                    setPlayersPosPerFrame(opponent2Edit, opponent2Pos, 10)
+                    setPlayersPosPerFrame(opponent3Edit, opponent3Pos, 10)
+                    setPlayersPosPerFrame(opponent4Edit, opponent4Pos, 10)
+                    setPlayersPosPerFrame(opponent5Edit, opponent5Pos, 10)
+                    return true
+                }
+                else -> return super.onOptionsItemSelected(item)
             }
-            "Frame 1" -> {
-                currentFrame = 1
-                setPlayersPosPerFrame(player1Edit,player1Pos,1)
-                setPlayersPosPerFrame(player2Edit,player2Pos,1)
-                setPlayersPosPerFrame(player3Edit,player3Pos,1)
-                setPlayersPosPerFrame(player4Edit,player4Pos,1)
-                setPlayersPosPerFrame(player5Edit,player5Pos,1)
-                setPlayersPosPerFrame(ballEdit,ballPos,1)
-                setPlayersPosPerFrame(opponent1Edit,opponent1Pos,1)
-                setPlayersPosPerFrame(opponent2Edit,opponent2Pos,1)
-                setPlayersPosPerFrame(opponent3Edit,opponent3Pos,1)
-                setPlayersPosPerFrame(opponent4Edit,opponent4Pos,1)
-                setPlayersPosPerFrame(opponent5Edit,opponent5Pos,1)
-                return true
-            }
-            "Frame 2" -> {
-                currentFrame = 2
-                setPlayersPosPerFrame(player1Edit,player1Pos,2)
-                setPlayersPosPerFrame(player2Edit,player2Pos,2)
-                setPlayersPosPerFrame(player3Edit,player3Pos,2)
-                setPlayersPosPerFrame(player4Edit,player4Pos,2)
-                setPlayersPosPerFrame(player5Edit,player5Pos,2)
-                setPlayersPosPerFrame(ballEdit,ballPos,2)
-                setPlayersPosPerFrame(opponent1Edit,opponent1Pos,2)
-                setPlayersPosPerFrame(opponent2Edit,opponent2Pos,2)
-                setPlayersPosPerFrame(opponent3Edit,opponent3Pos,2)
-                setPlayersPosPerFrame(opponent4Edit,opponent4Pos,2)
-                setPlayersPosPerFrame(opponent5Edit,opponent5Pos,2)
-                return true
-            }
-            "Frame 3" -> {
-                currentFrame = 3
-                setPlayersPosPerFrame(player1Edit,player1Pos,3)
-                setPlayersPosPerFrame(player2Edit,player2Pos,3)
-                setPlayersPosPerFrame(player3Edit,player3Pos,3)
-                setPlayersPosPerFrame(player4Edit,player4Pos,3)
-                setPlayersPosPerFrame(player5Edit,player5Pos,3)
-                setPlayersPosPerFrame(ballEdit,ballPos,3)
-                setPlayersPosPerFrame(opponent1Edit,opponent1Pos,3)
-                setPlayersPosPerFrame(opponent2Edit,opponent2Pos,3)
-                setPlayersPosPerFrame(opponent3Edit,opponent3Pos,3)
-                setPlayersPosPerFrame(opponent4Edit,opponent4Pos,3)
-                setPlayersPosPerFrame(opponent5Edit,opponent5Pos,3)
-                return true
-            }
-            "Frame 4" -> {
-                currentFrame = 4
-                setPlayersPosPerFrame(player1Edit,player1Pos,4)
-                setPlayersPosPerFrame(player2Edit,player2Pos,4)
-                setPlayersPosPerFrame(player3Edit,player3Pos,4)
-                setPlayersPosPerFrame(player4Edit,player4Pos,4)
-                setPlayersPosPerFrame(player5Edit,player5Pos,4)
-                setPlayersPosPerFrame(ballEdit,ballPos,4)
-                setPlayersPosPerFrame(opponent1Edit,opponent1Pos,4)
-                setPlayersPosPerFrame(opponent2Edit,opponent2Pos,4)
-                setPlayersPosPerFrame(opponent3Edit,opponent3Pos,4)
-                setPlayersPosPerFrame(opponent4Edit,opponent4Pos,4)
-                setPlayersPosPerFrame(opponent5Edit,opponent5Pos,4)
-                return true
-            }
-            "Frame 5" -> {
-                currentFrame = 5
-                setPlayersPosPerFrame(player1Edit,player1Pos,5)
-                setPlayersPosPerFrame(player2Edit,player2Pos,5)
-                setPlayersPosPerFrame(player3Edit,player3Pos,5)
-                setPlayersPosPerFrame(player4Edit,player4Pos,5)
-                setPlayersPosPerFrame(player5Edit,player5Pos,5)
-                setPlayersPosPerFrame(ballEdit,ballPos,5)
-                setPlayersPosPerFrame(opponent1Edit,opponent1Pos,5)
-                setPlayersPosPerFrame(opponent2Edit,opponent2Pos,5)
-                setPlayersPosPerFrame(opponent3Edit,opponent3Pos,5)
-                setPlayersPosPerFrame(opponent4Edit,opponent4Pos,5)
-                setPlayersPosPerFrame(opponent5Edit,opponent5Pos,5)
-                return true
-            }
-            "Frame 6" -> {
-                currentFrame = 6
-                setPlayersPosPerFrame(player1Edit,player1Pos,6)
-                setPlayersPosPerFrame(player2Edit,player2Pos,6)
-                setPlayersPosPerFrame(player3Edit,player3Pos,6)
-                setPlayersPosPerFrame(player4Edit,player4Pos,6)
-                setPlayersPosPerFrame(player5Edit,player5Pos,6)
-                setPlayersPosPerFrame(ballEdit,ballPos,6)
-                setPlayersPosPerFrame(opponent1Edit,opponent1Pos,6)
-                setPlayersPosPerFrame(opponent2Edit,opponent2Pos,6)
-                setPlayersPosPerFrame(opponent3Edit,opponent3Pos,6)
-                setPlayersPosPerFrame(opponent4Edit,opponent4Pos,6)
-                setPlayersPosPerFrame(opponent5Edit,opponent5Pos,6)
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Frame has been deleted!", Toast.LENGTH_SHORT).show()
         }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        fStore.collection("tactics").get().addOnSuccessListener{ result->
-            for (document in result){
-                if(document.id == tacticName){
-                    val array = document.data.get("player1") as ArrayList<HashMap<String,Float>>
-                    for(i in 0 until array.size){
-                        menu?.add(Menu.NONE,frame1,Menu.NONE,"Frame $i")
+        fStore.collection("tactics").get().addOnSuccessListener { result ->
+            for (document in result) {
+                if (document.id == tacticName) {
+                    val array = document.data.get("player1") as ArrayList<HashMap<String, Float>>
+                    for (i in 0 until array.size) {
+                        menu?.add(Menu.NONE, frame1, Menu.NONE, "Frame $i")
                     }
                 }
             }
@@ -618,7 +747,7 @@ class EditTacticActivity : AppCompatActivity() {
                                     var opponent2Map =
                                         frame.value as ArrayList<HashMap<String, Float>>
                                     for (position in opponent2Map) {
-                                        if(diffScreenSize) {
+                                        if (diffScreenSize) {
                                             var creatorScreenHeight: Float = getRatio().first
                                             var creatorScreenWidth: Float = getRatio().second
                                             var newX: Float =
@@ -627,7 +756,7 @@ class EditTacticActivity : AppCompatActivity() {
                                                 position.get("second")!! * (creatorScreenHeight)
                                             opponent2Pos.add(Pair(newX, newY))
                                             println("THIS IS THE PAIR $newX $newY")
-                                        }else {
+                                        } else {
                                             opponent2Pos.add(
                                                 Pair(
                                                     position.get("first"),
@@ -640,7 +769,7 @@ class EditTacticActivity : AppCompatActivity() {
                                     var opponent3Map =
                                         frame.value as ArrayList<HashMap<String, Float>>
                                     for (position in opponent3Map) {
-                                        if(diffScreenSize) {
+                                        if (diffScreenSize) {
                                             var creatorScreenHeight: Float = getRatio().first
                                             var creatorScreenWidth: Float = getRatio().second
                                             var newX: Float =
@@ -649,7 +778,7 @@ class EditTacticActivity : AppCompatActivity() {
                                                 position.get("second")!! * (creatorScreenHeight)
                                             opponent3Pos.add(Pair(newX, newY))
                                             println("THIS IS THE PAIR $newX $newY")
-                                        }else {
+                                        } else {
                                             opponent3Pos.add(
                                                 Pair(
                                                     position.get("first"),
@@ -662,7 +791,7 @@ class EditTacticActivity : AppCompatActivity() {
                                     var opponent4Map =
                                         frame.value as ArrayList<HashMap<String, Float>>
                                     for (position in opponent4Map) {
-                                        if(diffScreenSize) {
+                                        if (diffScreenSize) {
                                             var creatorScreenHeight: Float = getRatio().first
                                             var creatorScreenWidth: Float = getRatio().second
                                             var newX: Float =
@@ -671,7 +800,7 @@ class EditTacticActivity : AppCompatActivity() {
                                                 position.get("second")!! * (creatorScreenHeight)
                                             opponent4Pos.add(Pair(newX, newY))
                                             println("THIS IS THE PAIR $newX $newY")
-                                        }else {
+                                        } else {
                                             opponent4Pos.add(
                                                 Pair(
                                                     position.get("first"),
@@ -684,7 +813,7 @@ class EditTacticActivity : AppCompatActivity() {
                                     var opponent5Map =
                                         frame.value as ArrayList<HashMap<String, Float>>
                                     for (position in opponent5Map) {
-                                        if(diffScreenSize) {
+                                        if (diffScreenSize) {
                                             var creatorScreenHeight: Float = getRatio().first
                                             var creatorScreenWidth: Float = getRatio().second
                                             var newX: Float =
@@ -693,7 +822,7 @@ class EditTacticActivity : AppCompatActivity() {
                                                 position.get("second")!! * (creatorScreenHeight)
                                             opponent5Pos.add(Pair(newX, newY))
                                             println("THIS IS THE PAIR $newX $newY")
-                                        }else {
+                                        } else {
                                             opponent5Pos.add(
                                                 Pair(
                                                     position.get("first"),
@@ -747,6 +876,7 @@ class EditTacticActivity : AppCompatActivity() {
             }
         return Pair(screenRatioHeight, screenRatioWidth)
     }
+
     private fun getScreenSize(): Pair<Float, Float> {
         val displayMetrics = DisplayMetrics()
         val windowsManager = applicationContext.getSystemService(WINDOW_SERVICE) as WindowManager
