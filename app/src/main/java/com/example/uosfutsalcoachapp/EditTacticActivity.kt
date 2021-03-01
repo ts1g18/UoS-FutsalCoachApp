@@ -182,9 +182,48 @@ class EditTacticActivity : AppCompatActivity() {
 
         val btnAddFrame: Button = findViewById(R.id.btnAddFrame)
         btnAddFrame.setOnClickListener {
-
+            addFrame()
         }
 
+    }
+    /*
+    * this method adds a frame in the tactic
+    * the captain has to first drag and drop the players where he wants on the pitch
+    * then by clicking on the add frame button the current positions of all players are stored after the currently selected frame
+     */
+    private fun addFrame() {
+        var newPlayer1Pos = Pair(player1Edit.getX(), player1Edit.getY())
+        player1Pos.add(currentFrame, newPlayer1Pos)
+
+        var newPlayer2Pos = Pair(player2Edit.getX(), player2Edit.getY())
+        player2Pos.add(currentFrame, newPlayer2Pos)
+
+        var newPlayer3Pos = Pair(player3Edit.getX(), player3Edit.getY())
+        player3Pos.add(currentFrame, newPlayer3Pos)
+
+        var newPlayer4Pos = Pair(player4Edit.getX(), player4Edit.getY())
+        player4Pos.add(currentFrame, newPlayer4Pos)
+
+        var newPlayer5Pos = Pair(player5Edit.getX(), player5Edit.getY())
+        player5Pos.add(currentFrame, newPlayer5Pos)
+
+        var newBallPos = Pair(ballEdit.getX(), ballEdit.getY())
+        ballPos.add(currentFrame, newBallPos)
+
+        var newOpponent1Pos = Pair(opponent1Edit.getX(), opponent1Edit.getY())
+        opponent1Pos.add(currentFrame, newOpponent1Pos)
+
+        var newOpponent2Pos = Pair(opponent2Edit.getX(), opponent2Edit.getY())
+        opponent2Pos.add(currentFrame, newOpponent2Pos)
+
+        var newOpponent3Pos = Pair(opponent3Edit.getX(), opponent3Edit.getY())
+        opponent3Pos.add(currentFrame, newOpponent3Pos)
+
+        var newOpponent4Pos = Pair(opponent4Edit.getX(), opponent4Edit.getY())
+        opponent4Pos.add(currentFrame, newOpponent4Pos)
+
+        var newOpponent5Pos = Pair(opponent5Edit.getX(), opponent5Edit.getY())
+        opponent5Pos.add(currentFrame, newOpponent5Pos)
     }
 
     /*
