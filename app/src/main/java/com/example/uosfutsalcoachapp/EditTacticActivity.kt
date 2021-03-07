@@ -53,7 +53,6 @@ class EditTacticActivity : AppCompatActivity() {
     var deviceWidth = 0f
     var deviceHeight = 0f
     val displayMetrics = DisplayMetrics()
-    var frameToDeleteFromMenu = ""
 
 
     @RequiresApi(Build.VERSION_CODES.N)

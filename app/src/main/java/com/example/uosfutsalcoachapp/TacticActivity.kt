@@ -2,19 +2,27 @@ package com.example.uosfutsalcoachapp
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
+import android.view.Menu
+import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.activity_tactic.*
 import java.lang.Exception
 
@@ -476,4 +484,86 @@ class TacticActivity : AppCompatActivity() {
             }
         return Pair(screenRatioHeight, screenRatioWidth)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        var id = item.itemId
+        if (id == R.id.write_feedback){
+            createPopup()
+            return true
+        }else if(id == R.id.view_feedback){
+            val intent = Intent(this, SubmitFeedbackActivity::class.java)
+            intent.putExtra("tacticName", tacticName)
+            startActivity(intent)
+            finish()
+            return true
+        }else if(id == R.id.log_out_tactic){
+            logout()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_write_feedback, menu)
+        return true
+    }
+    //log the current user out and redirect him to the login activity
+    private fun logout(){
+        FirebaseAuth.getInstance().signOut();
+        Toast.makeText(baseContext, "Logged out successfuly.", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
+
+    /*
+    * this method saves the updated tactic (updated frames) in the firestore
+     */
+    private fun createPopup() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Write feedback for $tacticName")
+
+        val view = layoutInflater.inflate(R.layout.layout_popup_feedback, null)
+        val feedbackContent = view.findViewById<EditText>(R.id.feedback_content)
+
+        builder.setView((view))
+        builder.setPositiveButton("Submit", DialogInterface.OnClickListener { _, _ ->
+            if (feedbackContent.text.toString().isEmpty()) {
+                Toast.makeText(this, "Please write a comment for the tactic", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                saveFeedback(feedbackContent.text.toString())
+                Toast.makeText(this, "Your feedback was submitted!", Toast.LENGTH_SHORT).show()
+                clearPlayerPosArrays()
+                startActivity(Intent(this, HomeScreenActivity::class.java))
+                finish()
+            }
+        })
+        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { _, _ -> })
+        builder.show()
+    }
+
+    /*
+* this method stores the feedback in the firestore database when clicking the submit feedback.
+*/
+    private fun saveFeedback(feedbackContent: String) {
+            var userId = auth.currentUser?.uid
+            var tacticFeedbackFor = tacticName
+            val feedback = hashMapOf(
+                "AuthorId" to userId.toString(),
+                "Tactic" to tacticFeedbackFor,
+                "Content" to feedbackContent
+                )
+        val documentReference: DocumentReference = fStore.collection("feedbacks").document(tacticName)
+        // Add a new document with a generated ID
+        documentReference.set(feedback)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
+
+
+
+    }
+
 }
