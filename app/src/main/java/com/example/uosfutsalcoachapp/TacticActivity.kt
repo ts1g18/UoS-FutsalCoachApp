@@ -16,15 +16,18 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.activity_tactic.*
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class TacticActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -45,6 +48,8 @@ class TacticActivity : AppCompatActivity() {
     var screenRatioHeight = 0f
     var screenRatioWidth = 0f
     var diffScreenSize = false
+    private var userName = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tactic)
@@ -61,6 +66,8 @@ class TacticActivity : AppCompatActivity() {
             //set back button
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
+        getUsername(auth.currentUser?.uid.toString())
+
 
         val previewTacticBtn: Button = findViewById(R.id.btnPreviewTactic)
         previewTacticBtn.setOnClickListener {
@@ -243,7 +250,7 @@ class TacticActivity : AppCompatActivity() {
                                     var opponent2Map =
                                         frame.value as ArrayList<HashMap<String, Float>>
                                     for (position in opponent2Map) {
-                                        if(diffScreenSize) {
+                                        if (diffScreenSize) {
                                             var creatorScreenHeight: Float = getRatio().first
                                             var creatorScreenWidth: Float = getRatio().second
                                             var newX: Float =
@@ -252,7 +259,7 @@ class TacticActivity : AppCompatActivity() {
                                                 position.get("second")!! * (creatorScreenHeight)
                                             opponent2Pos.add(Pair(newX, newY))
                                             println("THIS IS THE PAIR $newX $newY")
-                                        }else {
+                                        } else {
                                             opponent2Pos.add(
                                                 Pair(
                                                     position.get("first"),
@@ -265,7 +272,7 @@ class TacticActivity : AppCompatActivity() {
                                     var opponent3Map =
                                         frame.value as ArrayList<HashMap<String, Float>>
                                     for (position in opponent3Map) {
-                                        if(diffScreenSize) {
+                                        if (diffScreenSize) {
                                             var creatorScreenHeight: Float = getRatio().first
                                             var creatorScreenWidth: Float = getRatio().second
                                             var newX: Float =
@@ -274,20 +281,20 @@ class TacticActivity : AppCompatActivity() {
                                                 position.get("second")!! * (creatorScreenHeight)
                                             opponent3Pos.add(Pair(newX, newY))
                                             println("THIS IS THE PAIR $newX $newY")
-                                        }else {
-                                        opponent3Pos.add(
-                                            Pair(
-                                                position.get("first"),
-                                                position.get("second")
-                                            ) as Pair<Float, Float>
-                                        )
+                                        } else {
+                                            opponent3Pos.add(
+                                                Pair(
+                                                    position.get("first"),
+                                                    position.get("second")
+                                                ) as Pair<Float, Float>
+                                            )
                                         }
                                     }
                                 } else if (frame.key == "opponent4") {
                                     var opponent4Map =
                                         frame.value as ArrayList<HashMap<String, Float>>
                                     for (position in opponent4Map) {
-                                        if(diffScreenSize) {
+                                        if (diffScreenSize) {
                                             var creatorScreenHeight: Float = getRatio().first
                                             var creatorScreenWidth: Float = getRatio().second
                                             var newX: Float =
@@ -296,7 +303,7 @@ class TacticActivity : AppCompatActivity() {
                                                 position.get("second")!! * (creatorScreenHeight)
                                             opponent4Pos.add(Pair(newX, newY))
                                             println("THIS IS THE PAIR $newX $newY")
-                                        }else {
+                                        } else {
                                             opponent4Pos.add(
                                                 Pair(
                                                     position.get("first"),
@@ -309,7 +316,7 @@ class TacticActivity : AppCompatActivity() {
                                     var opponent5Map =
                                         frame.value as ArrayList<HashMap<String, Float>>
                                     for (position in opponent5Map) {
-                                        if(diffScreenSize) {
+                                        if (diffScreenSize) {
                                             var creatorScreenHeight: Float = getRatio().first
                                             var creatorScreenWidth: Float = getRatio().second
                                             var newX: Float =
@@ -318,7 +325,7 @@ class TacticActivity : AppCompatActivity() {
                                                 position.get("second")!! * (creatorScreenHeight)
                                             opponent5Pos.add(Pair(newX, newY))
                                             println("THIS IS THE PAIR $newX $newY")
-                                        }else {
+                                        } else {
                                             opponent5Pos.add(
                                                 Pair(
                                                     position.get("first"),
@@ -487,27 +494,28 @@ class TacticActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var id = item.itemId
-        if (id == R.id.write_feedback){
+        if (id == R.id.write_feedback) {
             createPopup()
             return true
-        }else if(id == R.id.view_feedback){
+        } else if (id == R.id.view_feedback) {
             val intent = Intent(this, SubmitFeedbackActivity::class.java)
             intent.putExtra("tacticName", tacticName)
             startActivity(intent)
-            finish()
             return true
-        }else if(id == R.id.log_out_tactic){
+        } else if (id == R.id.log_out_tactic) {
             logout()
             return true
         }
         return super.onOptionsItemSelected(item)
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_write_feedback, menu)
         return true
     }
+
     //log the current user out and redirect him to the login activity
-    private fun logout(){
+    private fun logout() {
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(baseContext, "Logged out successfuly.", Toast.LENGTH_SHORT).show()
         startActivity(Intent(this, LoginActivity::class.java))
@@ -532,9 +540,9 @@ class TacticActivity : AppCompatActivity() {
             } else {
                 saveFeedback(feedbackContent.text.toString())
                 Toast.makeText(this, "Your feedback was submitted!", Toast.LENGTH_SHORT).show()
-                clearPlayerPosArrays()
-                startActivity(Intent(this, HomeScreenActivity::class.java))
-                finish()
+//                clearPlayerPosArrays()
+//                startActivity(Intent(this, HomeScreenActivity::class.java))
+//                finish()
             }
         })
         builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { _, _ -> })
@@ -545,25 +553,34 @@ class TacticActivity : AppCompatActivity() {
 * this method stores the feedback in the firestore database when clicking the submit feedback.
 */
     private fun saveFeedback(feedbackContent: String) {
-            var userId = auth.currentUser?.uid
-            var tacticFeedbackFor = tacticName
-            val feedback = hashMapOf(
-                "AuthorId" to userId.toString(),
-                "Tactic" to tacticFeedbackFor,
-                "Content" to feedbackContent
+        val time = Date(Timestamp.now().seconds*1000).toLocaleString()
+        var tacticFeedbackFor = tacticName
+        fStore.collection("feedbacks").document()
+            .set(
+                hashMapOf(
+                    "AuthorId" to userName,
+                    "Tactic" to tacticFeedbackFor,
+                    "Content" to feedbackContent,
+                    "time" to time,
                 )
-        val documentReference: DocumentReference = fStore.collection("feedbacks").document(tacticName)
-        // Add a new document with a generated ID
-        documentReference.set(feedback)
-            .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added")
+            )
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully written!")
+
             }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
-            }
-
-
-
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
+    /*
+* this method gets the user's id as a parameter and uses it to get the user's name from database in order to display their name on feedback
+*/
+    private fun getUsername(userId : String){
+        fStore.collection("users").get().addOnSuccessListener { result ->
+            for (document in result) {
+                if (document.id == userId) {
+                    userName = document.get("Full Name").toString()
+                }
+            }
+        }
+    }
 }
