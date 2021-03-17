@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_chat.*
 class SubmitFeedbackActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var fStore: FirebaseFirestore
-    private val TAG = "SubmitFeedbackActivity"
+    private val TAG = "SubmitReviewActivity"
     private val feedbackList = ArrayList<FeedbackItem>()
     private val adapter = FeedbackAdapter(feedbackList)
     private var tacticName = ""
@@ -26,7 +26,7 @@ class SubmitFeedbackActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_submit_feedback)
+        setContentView(R.layout.activity_submit_review)
 
         // Initialize Firebase Auth and firestore
         auth = Firebase.auth
@@ -37,7 +37,7 @@ class SubmitFeedbackActivity : AppCompatActivity() {
         //show the back button in action bar
         if (actionBar != null) {
             //set action bar title
-            actionBar.title = "$tacticName - Feedback"
+            actionBar.title = "$tacticName - Reviews"
             //set back button
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
@@ -49,7 +49,7 @@ class SubmitFeedbackActivity : AppCompatActivity() {
     * this method gets all feedbacks for the tactic from the firestore and displays them in the recycler view list
     */
     private fun generateFeedbacks() {
-        fStore.collection("feedbacks").get().addOnSuccessListener { result ->
+        fStore.collection("reviews").get().addOnSuccessListener { result ->
             for (document in result) {
                 if(document.data.get("Tactic") == tacticName) {
                     val drawable = R.drawable.ic_feedback_icon
@@ -62,9 +62,6 @@ class SubmitFeedbackActivity : AppCompatActivity() {
             recycler_view.layoutManager =
                 LinearLayoutManager(this) //LinearLayoutManager creates vertical scrolling list
             recycler_view.setHasFixedSize(true) //optimization
-            if(recycler_view.size == 0){
-                Toast.makeText(this, "THERE ARE NO REVIEWS FOR THIS TACTIC", Toast.LENGTH_SHORT).show()
-            }
         }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents.", exception)

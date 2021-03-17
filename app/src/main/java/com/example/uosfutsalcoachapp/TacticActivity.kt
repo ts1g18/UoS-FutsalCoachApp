@@ -527,7 +527,7 @@ class TacticActivity : AppCompatActivity() {
      */
     private fun createPopup() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Write feedback for $tacticName")
+        builder.setTitle("Write a review for $tacticName")
 
         val view = layoutInflater.inflate(R.layout.layout_popup_feedback, null)
         val feedbackContent = view.findViewById<EditText>(R.id.feedback_content)
@@ -538,7 +538,7 @@ class TacticActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please write a comment for the tactic", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                saveFeedback(feedbackContent.text.toString())
+                saveReview(feedbackContent.text.toString())
                 Toast.makeText(this, "Your feedback was submitted!", Toast.LENGTH_SHORT).show()
 //                clearPlayerPosArrays()
 //                startActivity(Intent(this, HomeScreenActivity::class.java))
@@ -552,15 +552,15 @@ class TacticActivity : AppCompatActivity() {
     /*
 * this method stores the feedback in the firestore database when clicking the submit feedback.
 */
-    private fun saveFeedback(feedbackContent: String) {
+    private fun saveReview(reviewContent: String) {
         val time = Date(Timestamp.now().seconds*1000).toLocaleString()
         var tacticFeedbackFor = tacticName
-        fStore.collection("feedbacks").document()
+        fStore.collection("reviews").document()
             .set(
                 hashMapOf(
                     "AuthorId" to userName,
                     "Tactic" to tacticFeedbackFor,
-                    "Content" to feedbackContent,
+                    "Content" to reviewContent,
                     "time" to time,
                 )
             )

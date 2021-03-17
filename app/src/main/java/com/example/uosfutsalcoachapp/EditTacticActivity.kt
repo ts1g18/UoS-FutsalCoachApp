@@ -13,17 +13,13 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_create_tactic.*
 import kotlinx.android.synthetic.main.activity_edit_tactic.*
-import kotlinx.android.synthetic.main.activity_profile.*
 
 class EditTacticActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
