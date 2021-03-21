@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_captain_view_tactic.*
 import kotlinx.android.synthetic.main.activity_chat.*
 
-class SubmitFeedbackActivity : AppCompatActivity() {
+class SubmitReviewActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var fStore: FirebaseFirestore
     private val TAG = "SubmitReviewActivity"

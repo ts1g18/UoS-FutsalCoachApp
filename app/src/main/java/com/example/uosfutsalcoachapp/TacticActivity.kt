@@ -498,7 +498,7 @@ class TacticActivity : AppCompatActivity() {
             createPopup()
             return true
         } else if (id == R.id.view_feedback) {
-            val intent = Intent(this, SubmitFeedbackActivity::class.java)
+            val intent = Intent(this, SubmitReviewActivity::class.java)
             intent.putExtra("tacticName", tacticName)
             startActivity(intent)
             return true
