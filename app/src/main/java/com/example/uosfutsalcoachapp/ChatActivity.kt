@@ -40,8 +40,6 @@ class ChatActivity : AppCompatActivity() {
         //set back button
         actionBar.setDisplayHomeAsUpEnabled(true)
 
-        getUsernameAndPhoto(auth.currentUser!!.uid)
-
         generateMessageList()
 
         btnSendMessage.setOnClickListener {
@@ -120,19 +118,6 @@ class ChatActivity : AppCompatActivity() {
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
-    /*
-    * this method gets the user's id as a parameter and uses it to get the user's name and photo from database in order to load them in the widget bar above the chat
-     */
-    private fun getUsernameAndPhoto(userId : String){
-        fStore.collection("users").get().addOnSuccessListener{ result ->
-            for (document in result){
-                if(document.id == userId){
-                    Picasso.get().load(document.data.get("User Photo").toString()).into(profile_image_chat)
-                    tv_username_chat.setText(document.get("Full Name").toString())
-                }
-            }
-        }
-    }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
