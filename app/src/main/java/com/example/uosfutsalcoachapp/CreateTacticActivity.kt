@@ -293,7 +293,7 @@ class CreateTacticActivity : AppCompatActivity() {
 
     private val dragListener = View.OnDragListener { view, event ->
         when (event.action) {
-            //in response to the user gesture to begin drag (long clin on player pin)
+            //in response to the user gesture to begin drag (long click on player pin)
             //the event with action type 'ACTION_DRAG_STARTED' should have a listener that uses the MIME type methods in clip descritpion
             //if the listener can accept a drop, it should return true to tell the system to continue to send drag events to the listener
             //if it returns false the system will stop sending drag events until it sends out 'ACTION_DRAG_ENDED'

@@ -80,8 +80,6 @@ class SignupActivity : AppCompatActivity() {
 
             selectphoto_imageview_register.setImageBitmap(bitmap)
             btn_select_photo.alpha = 0f
-//            val bitmapDrawable = BitmapDrawable(bitmap)
-//            btn_select_photo.setBackgroundDrawable(bitmapDrawable)
         }
     }
 
@@ -120,19 +118,15 @@ class SignupActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(username.text.toString(), password.text.toString())
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-//                        // Sign in success, update UI with the signed-in user's information
-                    //Log.d(TAG, "createUserWithEmail:success")
-//                        val user = auth.currentUser
-//                        updateUI(user)
-
+                    // Sign in success, update UI with the signed-in user's information
                     val user = Firebase.auth.currentUser
 
                     //send a verification email to the registered email ID
                     user!!.sendEmailVerification()
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-//                                uploadImageToFirebaseStorage()
-                                Toast.makeText(baseContext,"Signed up successfuly. A verification email has been sent to your email address",Toast.LENGTH_SHORT).show()
+                                Toast.makeText(baseContext,"Signed up successfuly. " +
+                                        "A verification email has been sent to your email address",Toast.LENGTH_SHORT).show()
                                 userID = user.uid
                                 if(username.text.toString() == "ts1g18@soton.ac.uk"){
                                     role = "Team Captain"
@@ -161,17 +155,13 @@ class SignupActivity : AppCompatActivity() {
                                 finish()
                             }
                         }
-
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(
                         baseContext, "Sign up failed. Try again later.",
                         Toast.LENGTH_SHORT
                     ).show()
-//                        updateUI(null)
                 }
-
-                // ...
             }
     }
 
@@ -185,7 +175,6 @@ class SignupActivity : AppCompatActivity() {
         ref.putFile(selectedPhotoUri!!)
             .addOnSuccessListener {
                 Log.d(TAG, "Successfully uploaded image: ${it.metadata?.path}")
-
                 //need to have access to file location
                 ref.downloadUrl.addOnSuccessListener {
                     Log.d(TAG, "File location: ${it}")

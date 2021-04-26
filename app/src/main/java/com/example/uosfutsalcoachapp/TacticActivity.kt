@@ -171,7 +171,6 @@ class TacticActivity : AppCompatActivity() {
                                             var newY: Float =
                                                 position.get("second")!! * (creatorScreenHeight)
                                             player4Pos.add(Pair(newX, newY))
-                                            println("THIS IS THE PAIR $newX $newY")
                                         } else {
                                             player4Pos.add(
                                                 Pair(
@@ -361,9 +360,9 @@ class TacticActivity : AppCompatActivity() {
 
 
     /*
- * this method takes as an argument: a player (or ball) and the arraylist of all its points during the tactic
- * it then animates the player passed as argument from point to point in the sequence provided in the arraylist
-  */
+    * this method takes as an argument: a player (or ball) and the arraylist of all its points during the tactic
+    * it then animates the player passed as argument from point to point in the sequence provided in the arraylist
+    */
     private fun movePlayer(player: Button, positions: ArrayList<Pair<Float, Float>>) {
         var id = 1
         val animEnd: AnimatorListenerAdapter = object : AnimatorListenerAdapter() {
@@ -383,9 +382,9 @@ class TacticActivity : AppCompatActivity() {
     }
 
     /*
- * this method clears all of the playerPos arrays
- * used when going back to previous activity to ensure that they are re-setted each time the player loads create tactic activity
-  */
+    * this method clears all of the playerPos arrays
+    * used when going back to previous activity to ensure that they are re-setted each time the player loads create tactic activity
+    */
     fun clearPlayerPosArrays() {
         player1Pos.clear()
         player2Pos.clear()
@@ -472,15 +471,12 @@ class TacticActivity : AppCompatActivity() {
                                     var thisScreenHeight: Float = getScreenSize().first
                                     var thisScreenWidth: Float = getScreenSize().second
                                     if (!(creatorHeight.toFloat() == thisScreenHeight && creatorWidth.toFloat() == thisScreenWidth)) {
-                                        screenRatioHeight =
-                                            thisScreenHeight.div(creatorHeight.toFloat())
-                                        screenRatioWidth =
-                                            thisScreenWidth.div(creatorWidth.toFloat())
+                                        screenRatioHeight = thisScreenHeight.div(creatorHeight.toFloat())
+                                        screenRatioWidth = thisScreenWidth.div(creatorWidth.toFloat())
                                         diffScreenSize = true
                                     }
                                 }
                             }
-
                         }
                         .addOnFailureListener { e -> Log.w(TAG, "No such document", e) }
                 }
@@ -540,9 +536,6 @@ class TacticActivity : AppCompatActivity() {
             } else {
                 saveReview(feedbackContent.text.toString())
                 Toast.makeText(this, "Your feedback was submitted!", Toast.LENGTH_SHORT).show()
-//                clearPlayerPosArrays()
-//                startActivity(Intent(this, HomeScreenActivity::class.java))
-//                finish()
             }
         })
         builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { _, _ -> })
@@ -550,8 +543,8 @@ class TacticActivity : AppCompatActivity() {
     }
 
     /*
-* this method stores the feedback in the firestore database when clicking the submit feedback.
-*/
+    * this method stores the feedback in the firestore database when clicking the submit feedback.
+    */
     private fun saveReview(reviewContent: String) {
         val time = Date(Timestamp.now().seconds*1000).toLocaleString()
         var tacticFeedbackFor = tacticName
@@ -572,8 +565,8 @@ class TacticActivity : AppCompatActivity() {
     }
 
     /*
-* this method gets the user's id as a parameter and uses it to get the user's name from database in order to display their name on feedback
-*/
+    * this method gets the user's id as a parameter and uses it to get the user's name from database in order to display their name on feedback
+    */
     private fun getUsername(userId : String){
         fStore.collection("users").get().addOnSuccessListener { result ->
             for (document in result) {

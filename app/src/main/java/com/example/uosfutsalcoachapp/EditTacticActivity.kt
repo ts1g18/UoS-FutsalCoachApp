@@ -394,11 +394,7 @@ class EditTacticActivity : AppCompatActivity() {
     }
 
 
-    private fun setPlayersPosPerFrame(
-        player: Button,
-        playerPosList: ArrayList<Pair<Float, Float>>,
-        frame: Int
-    ) {
+    private fun setPlayersPosPerFrame(player: Button, playerPosList: ArrayList<Pair<Float, Float>>, frame: Int) {
         player.setX(playerPosList.get(frame).first)
         player.setY(playerPosList.get(frame).second)
     }
